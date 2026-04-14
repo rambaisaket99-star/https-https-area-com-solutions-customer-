@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>404 — Page Not Found · Area AI</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#faf9f6;--bg2:#f3f1eb;--white:#fff;--border:#dedad0;--border2:#ccc8bc;
+  --text:#19190f;--text2:#48483a;--text3:#78786a;--text4:#a8a89a;--accent:#c8773a;
+  --font:'DM Sans','Helvetica Neue',sans-serif;--serif:'DM Serif Display',Georgia,serif;
+  --nav-h:60px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--font)}
+
+nav{position:sticky;top:0;z-index:200;height:var(--nav-h);background:rgba(250,249,246,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px}
+.nav-brand{display:flex;align-items:center;gap:9px;flex-shrink:0;cursor:pointer}
+.nav-brand-name{font-size:18px;font-weight:600;letter-spacing:-.04em}
+.nav-actions{display:flex;gap:8px;margin-left:auto}
+.btn{display:inline-flex;align-items:center;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;border:none;cursor:pointer;transition:all .14s;font-family:var(--font)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}.btn-outline:hover{background:var(--bg2)}
+.btn-dark{background:var(--text);color:#fff}.btn-dark:hover{background:#2c2c20}
+
+.page-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - var(--nav-h));padding:60px 32px}
+.error-box{max-width:580px;text-align:center}
+.error-code{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text4);margin-bottom:24px;display:block}
+.error-butterfly{font-size:72px;margin-bottom:32px;animation:float 3s ease-in-out infinite;display:block}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.error-title{font-family:var(--serif);font-size:clamp(36px,5vw,58px);font-weight:400;letter-spacing:-.03em;line-height:1.1;margin-bottom:18px}
+.error-title em{font-style:italic;color:var(--text3)}
+.error-sub{font-size:16px;color:var(--text3);font-weight:300;line-height:1.75;margin-bottom:36px;max-width:440px;margin-left:auto;margin-right:auto}
+.error-btns{display:flex;gap:11px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
+.btn-primary{padding:12px 24px;border-radius:9px;background:var(--text);color:#fff;border:none;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s}
+.btn-primary:hover{background:#2c2c20;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.btn-secondary{padding:12px 24px;border-radius:9px;background:transparent;color:var(--text);border:1.5px solid var(--border2);font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s}
+.btn-secondary:hover{background:var(--bg2)}
+.error-links{display:flex;align-items:center;gap:6px;justify-content:center;flex-wrap:wrap}
+.error-link{font-size:14px;color:var(--text3);padding:6px 14px;border-radius:7px;border:1px solid var(--border);background:var(--white);cursor:pointer;transition:all .12s}
+.error-link:hover{background:var(--bg2);border-color:var(--border2);color:var(--text)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand" onclick="window.location.href='index.html'">
+    <svg width="26" height="26" viewBox="0 0 80 80" fill="none">
+      <defs><radialGradient id="g1" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".95"/><stop offset="100%" stop-color="#8ab5f5" stop-opacity=".88"/></radialGradient><radialGradient id="g2" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".9"/><stop offset="100%" stop-color="#7aaaf0" stop-opacity=".92"/></radialGradient></defs>
+      <ellipse cx="30" cy="27" rx="23" ry="19" fill="url(#g1)" transform="rotate(-18 30 27)"/>
+      <ellipse cx="50" cy="27" rx="23" ry="19" fill="url(#g1)" transform="rotate(18 50 27)"/>
+      <ellipse cx="31" cy="56" rx="17" ry="14" fill="url(#g2)" transform="rotate(14 31 56)"/>
+      <ellipse cx="49" cy="56" rx="17" ry="14" fill="url(#g2)" transform="rotate(-14 49 56)"/>
+    </svg>
+    <span class="nav-brand-name">Area</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-outline" onclick="window.location.href='area-console.html'">Console</button>
+    <button class="btn btn-dark" onclick="window.location.href='index.html'">Home</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="error-box">
+    <span class="error-code">Error 404</span>
+    <span class="error-butterfly">🦋</span>
+    <h1 class="error-title">This page <em>flew away</em></h1>
+    <p class="error-sub">The page you're looking for doesn't exist, was moved, or is no longer available. Let's get you back to somewhere useful.</p>
+    <div class="error-btns">
+      <button class="btn-primary" onclick="window.location.href='index.html'">Back to home</button>
+      <button class="btn-secondary" onclick="history.back()">← Go back</button>
+    </div>
+    <div class="error-links">
+      <span class="error-link" onclick="window.location.href='area-docs.html'">📄 Documentation</span>
+      <span class="error-link" onclick="window.location.href='area-console.html'">⚙️ Console</span>
+      <span class="error-link" onclick="window.location.href='pricing.html'">💳 Pricing</span>
+      <span class="error-link" onclick="window.location.href='blog.html'">📝 Blog</span>
+      <span class="error-link" onclick="window.location.href='about.html'">👋 About</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

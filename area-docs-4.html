@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Area Docs — Developer Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#faf9f6;--bg2:#f3f1eb;--bg3:#eceae2;
+  --white:#fff;--border:#dedad0;--border2:#ccc8bc;--border3:#b8b4a4;
+  --text:#19190f;--text2:#48483a;--text3:#78786a;--text4:#a8a89a;
+  --accent:#c8773a;--blue:#3b6fe8;--green:#2e7d52;--red:#c0392b;
+  --font:"DM Sans","Helvetica Neue",sans-serif;
+  --serif:"DM Serif Display",Georgia,serif;
+  --mono:"JetBrains Mono",monospace;
+  --nav-h:60px;--sidebar:260px;--toc:220px;
+}
+html,body{height:100%;background:var(--white)}
+body{color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font)}
+nav{position:sticky;top:0;z-index:200;height:var(--nav-h);background:rgba(250,249,246,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:0}
+.nav-brand{display:flex;align-items:center;gap:9px;margin-right:20px;flex-shrink:0;cursor:pointer}
+.nav-brand-name{font-size:18px;font-weight:600;letter-spacing:-.035em}
+.nav-divider{width:1px;height:20px;background:var(--border);margin:0 14px}
+.nav-section{font-size:14px;font-weight:500;color:var(--text2)}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:16px}
+.nav-link{padding:6px 11px;border-radius:7px;font-size:13.5px;color:var(--text3);cursor:pointer;transition:all .12s}
+.nav-link:hover{background:var(--bg2);color:var(--text)}
+.nav-link.active{background:var(--bg2);color:var(--text);font-weight:500}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:8px;font-size:13.5px;font-weight:500;border:none;transition:all .14s;cursor:pointer}
+.btn-dark{background:var(--text);color:#fff}.btn-dark:hover{background:#2c2c20}
+.search-box{display:flex;align-items:center;gap:9px;padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-size:13px;color:var(--text3);cursor:pointer;min-width:190px}
+.search-kbd{font-size:10.5px;font-family:var(--mono);background:var(--white);border:1px solid var(--border);padding:1px 6px;border-radius:4px;color:var(--text4);margin-left:auto}
+.docs-layout{display:grid;grid-template-columns:var(--sidebar) 1fr var(--toc);min-height:calc(100vh - var(--nav-h))}
+.docs-sidebar{border-right:1px solid var(--border);position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;padding:20px 0 40px;background:var(--bg)}
+.docs-sidebar::-webkit-scrollbar{width:4px}.docs-sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.docs-main{background:var(--white)}
+.docs-toc{border-left:1px solid var(--border);position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;padding:28px 18px;background:var(--bg)}
+.sb-group-label{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--text4);padding:12px 20px 6px;margin-top:6px}
+.sb-item{display:flex;align-items:center;justify-content:space-between;padding:6.5px 20px;font-size:13.5px;color:var(--text2);cursor:pointer;transition:all .1s;border-left:2.5px solid transparent}
+.sb-item:hover{background:var(--bg2);color:var(--text)}
+.sb-item.active{background:var(--bg2);color:var(--text);font-weight:500;border-left-color:var(--text)}
+.sb-badge{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--bg3);color:var(--text3)}
+.sb-badge.new{background:#dcfce7;color:#166534}
+.sb-badge.beta{background:#fef3c7;color:#92400e}
+.sb-divider{height:1px;background:var(--border);margin:8px 20px}
+.toc-label{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text4);margin-bottom:14px}
+.toc-item{display:block;padding:4px 0;font-size:12.5px;color:var(--text3);cursor:pointer;transition:color .12s;line-height:1.5}
+.toc-item:hover,.toc-item.active{color:var(--text)}
+.toc-item.active{font-weight:500}
+.toc-item.h3{padding-left:12px}
+.toc-divider{height:1px;background:var(--border);margin:12px 0}
+.toc-actions{display:flex;flex-direction:column;gap:8px}
+.toc-action{font-size:12.5px;color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:6px}
+.toc-action:hover{color:var(--text)}
+.doc-section{display:none;padding:52px 64px 80px}
+.doc-section.active{display:block}
+.doc-header{margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.doc-eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text4);margin-bottom:13px}
+.doc-title{font-family:var(--serif);font-size:54px;font-weight:400;letter-spacing:-.04em;line-height:1.05;color:var(--text);margin-bottom:16px}
+.doc-lead{font-size:18px;color:var(--text2);line-height:1.7;font-weight:300;max-width:640px}
+.doc-meta{display:flex;align-items:center;gap:16px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.doc-meta-item{font-size:12.5px;color:var(--text4)}
+.doc-body h2{font-family:var(--serif);font-size:34px;font-weight:400;letter-spacing:-.03em;color:var(--text);margin:52px 0 16px;padding-top:52px;border-top:1px solid var(--border)}
+.doc-body h2:first-child{margin-top:0;padding-top:0;border-top:none}
+.doc-body h3{font-size:21px;font-weight:600;letter-spacing:-.015em;color:var(--text);margin:36px 0 13px}
+.doc-body h4{font-size:16px;font-weight:600;color:var(--text);margin:26px 0 9px}
+.doc-body p{font-size:15.5px;color:var(--text2);line-height:1.74;font-weight:300;margin-bottom:18px}
+.doc-body ul,.doc-body ol{margin:14px 0 22px 24px;display:flex;flex-direction:column;gap:8px}
+.doc-body ul{list-style:disc}.doc-body ol{list-style:decimal}
+.doc-body li{font-size:15.5px;color:var(--text2);line-height:1.7;font-weight:300}
+.doc-body li strong,.doc-body p strong{font-weight:600;color:var(--text)}
+.doc-body code{font-family:var(--mono);font-size:13px;background:#f0eee6;border:1px solid var(--border);padding:2px 7px;border-radius:5px;color:#c8773a}
+.doc-body a{color:var(--blue);text-decoration:underline;cursor:pointer}
+.doc-body hr{border:none;border-top:1px solid var(--border);margin:44px 0}
+.doc-body table{width:100%;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:22px 0;font-size:14px;border-collapse:collapse}
+.doc-body thead{background:var(--bg2)}
+.doc-body th{padding:12px 18px;font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);text-align:left;border-bottom:1px solid var(--border)}
+.doc-body td{padding:13px 18px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;line-height:1.6;font-weight:300}
+.doc-body tr:last-child td{border-bottom:none}
+.doc-body tr:hover td{background:var(--bg)}
+.code-block{background:#1e1e2e;border-radius:12px;overflow:hidden;margin:22px 0;border:1px solid #2a2a3e}
+.cb-head{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#16162a;border-bottom:1px solid #2a2a3e}
+.cb-tabs{display:flex;gap:2px}
+.cb-tab{font-size:12px;font-weight:500;padding:4px 11px;border-radius:5px;color:#6c6c8a;cursor:pointer;transition:all .12s}
+.cb-tab.on{background:#2a2a3e;color:#cdd6f4}
+.cb-lang{font-size:10.5px;font-weight:500;color:#585b70;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.cb-copy{font-size:12px;color:#585b70;cursor:pointer;padding:4px 10px;border-radius:5px;border:1px solid #2a2a3e;background:transparent;transition:all .12s;font-family:var(--font)}
+.cb-copy:hover{background:#2a2a3e;color:#cdd6f4}
+.cb-body{padding:20px;overflow-x:auto}
+.cb-body pre{font-family:var(--mono);font-size:13.5px;line-height:1.68;color:#cdd6f4;tab-size:2;white-space:pre}
+.kw{color:#cba6f7}.str{color:#a6e3a1}.cmt{color:#585b70;font-style:italic}.num{color:#fab387}
+.fn{color:#89b4fa}.cls{color:#89dceb}.prop{color:#89dceb}.var{color:#cdd6f4}.op{color:#89b4fa}
+.callout{border-radius:12px;padding:18px 22px;margin:22px 0;display:flex;gap:14px}
+.callout.info{background:#eff6ff;border:1px solid #bfdbfe}
+.callout.warn{background:#fffbeb;border:1px solid #fde68a}
+.callout.tip{background:#f0fdf4;border:1px solid #bbf7d0}
+.callout.danger{background:#fff1f2;border:1px solid #fecdd3}
+.callout-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.callout-body{font-size:14.5px;line-height:1.68;font-weight:300}
+.callout-body strong{font-weight:600}
+.callout.info .callout-body{color:#1e40af}
+.callout.warn .callout-body{color:#92400e}
+.callout.tip .callout-body{color:#166534}
+.callout.danger .callout-body{color:#9f1239}
+.param-table{width:100%;margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;border-collapse:collapse}
+.pt-head{background:var(--bg2)}
+.pt-head th{padding:11px 18px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text4);text-align:left;border-bottom:1px solid var(--border)}
+.param-table td{padding:14px 18px;font-size:13.5px;color:var(--text2);vertical-align:top;border-bottom:1px solid var(--border);line-height:1.55;font-weight:300}
+.param-table tr:last-child td{border-bottom:none}
+.param-table tr:hover td{background:var(--bg)}
+.pname{font-family:var(--mono);font-size:12.5px;color:var(--text);font-weight:500}
+.ptype{font-family:var(--mono);font-size:12px;color:#c8773a;background:#fff7ed;border:1px solid #fed7aa;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.req{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#9f1239;background:#fff1f2;border:1px solid #fecdd3;padding:1px 5px;border-radius:4px;margin-left:6px}
+.opt{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text4);background:var(--bg2);border:1px solid var(--border);padding:1px 5px;border-radius:4px;margin-left:6px}
+.models-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}
+.model-card{border:1.5px solid var(--border);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:14px;transition:all .14s}
+.model-card:hover{border-color:var(--border2);box-shadow:0 6px 22px rgba(0,0,0,.08)}
+.model-card.flagship{border-color:var(--text);background:var(--text)}
+.mc-badge{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text4)}
+.model-card.flagship .mc-badge{color:rgba(255,255,255,.5)}
+.mc-name{font-family:var(--serif);font-size:26px;font-weight:400;letter-spacing:-.03em;color:var(--text)}
+.model-card.flagship .mc-name{color:#fff}
+.mc-id{font-family:var(--mono);font-size:11.5px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;display:inline-block;width:fit-content}
+.model-card.flagship .mc-id{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.7)}
+.mc-desc{font-size:13px;color:var(--text2);line-height:1.62;font-weight:300}
+.model-card.flagship .mc-desc{color:rgba(255,255,255,.65)}
+.mc-specs{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+.model-card.flagship .mc-specs{border-color:rgba(255,255,255,.15)}
+.mc-spec{display:flex;justify-content:space-between;font-size:12.5px}
+.mc-sk{color:var(--text3);font-weight:300}
+.mc-sv{color:var(--text);font-weight:500;font-family:var(--mono);font-size:12px}
+.model-card.flagship .mc-sk{color:rgba(255,255,255,.5)}
+.model-card.flagship .mc-sv{color:#fff}
+.sdk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:22px 0}
+.sdk-card{border:1px solid var(--border);border-radius:13px;padding:24px;display:flex;flex-direction:column;gap:12px;transition:all .14s}
+.sdk-card:hover{border-color:var(--border2);box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.sdk-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid var(--border)}
+.sdk-name{font-size:17px;font-weight:600;color:var(--text)}
+.sdk-desc{font-size:13.5px;color:var(--text2);line-height:1.62;font-weight:300}
+.sdk-install{background:#1e1e2e;border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:13px;color:#a6e3a1;border:1px solid #2a2a3e}
+.sdk-ver{font-size:12px;font-family:var(--mono);color:var(--text4)}
+.step-guide{display:flex;flex-direction:column;gap:0;margin:24px 0;position:relative}
+.step-guide::before{content:"";position:absolute;left:19px;top:40px;bottom:40px;width:2px;background:var(--border)}
+.step{display:flex;gap:20px;align-items:flex-start;margin-bottom:32px;position:relative;z-index:1}
+.step:last-child{margin-bottom:0}
+.step-num{width:38px;height:38px;border-radius:50%;border:2px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--text);flex-shrink:0}
+.step-body{flex:1;padding-top:7px}
+.step-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:7px}
+.step-desc{font-size:14.5px;color:var(--text2);line-height:1.68;font-weight:300}
+.response-preview{background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:20px 0}
+.rp-head{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.rp-status{font-size:12px;font-weight:700;padding:3px 8px;border-radius:5px;font-family:var(--mono)}
+.rp-status.ok{background:#dcfce7;color:#166534}
+.rp-status.post{background:#dbeafe;color:#1d4ed8}
+.rp-path{font-family:var(--mono);font-size:12.5px;color:var(--text3)}
+.rp-body{padding:16px 18px;font-family:var(--mono);font-size:13px;line-height:1.65;color:var(--text2)}
+.err-grid{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:22px 0}
+.err-row{display:grid;grid-template-columns:80px 180px 1fr;background:var(--white);transition:background .1s}
+.err-row:hover{background:var(--bg)}
+.err-row.head{background:var(--bg2)}
+.err-c{padding:13px 16px;font-size:13.5px;color:var(--text2);line-height:1.5;font-weight:300}
+.err-c.code{font-family:var(--mono);font-size:13px;font-weight:600}
+.err-row.head .err-c{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text4)}
+.s4{color:#c8773a}.s5{color:var(--red)}
+.pill{display:inline-flex;align-items:center;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px}
+.pill-blue{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.pill-green{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.pill-orange{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+.pill-gray{background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
+.doc-nav-footer{display:flex;justify-content:space-between;padding:36px 0 0;margin-top:36px;border-top:1px solid var(--border)}
+.doc-nav-btn{display:flex;flex-direction:column;gap:4px;padding:14px 20px;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all .14s;max-width:230px}
+.doc-nav-btn:hover{border-color:var(--border2);box-shadow:0 3px 14px rgba(0,0,0,.06)}
+.doc-nav-dir{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text4)}
+.doc-nav-title{font-size:14.5px;font-weight:500;color:var(--text)}
+.doc-nav-btn.next{align-items:flex-end}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 64px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.foot-left{display:flex;align-items:center;gap:12px}
+.foot-brand{font-size:15px;font-weight:600;letter-spacing:-.03em}
+.foot-copy{font-size:13px;color:var(--text4)}
+.foot-links{display:flex;gap:18px}
+.foot-links a{font-size:13px;color:var(--text3);cursor:pointer}
+.foot-links a:hover{color:var(--text)}
+/* MOBILE HAMBURGER */
+.mob-nav{display:none}
+.mob-topbar{display:none;align-items:center;gap:10px;padding:0 16px;height:52px;background:rgba(250,249,246,.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:300}
+.mob-brand{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.03em}
+.mob-menu-btn{margin-left:auto;width:36px;height:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;border:none;background:transparent;flex-shrink:0}
+.mob-menu-btn span{display:block;width:22px;height:2px;background:var(--text);border-radius:1px;transition:all .25s}
+.mob-drawer{position:fixed;inset:0;z-index:400;pointer-events:none}
+.mob-drawer-bg{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .28s;pointer-events:none}
+.mob-drawer.open .mob-drawer-bg{opacity:1;pointer-events:all}
+.mob-drawer-panel{position:absolute;left:0;top:0;bottom:0;width:80%;max-width:300px;background:var(--bg);overflow-y:auto;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);padding:20px 0 40px;box-shadow:4px 0 24px rgba(0,0,0,.12)}
+.mob-drawer.open .mob-drawer-panel{transform:translateX(0)}
+.mob-drawer-close{display:flex;align-items:center;justify-content:flex-end;padding:8px 16px 16px;margin-bottom:4px}
+.mob-close-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--text3)}
+@media(max-width:900px){
+  nav{display:none}
+  .mob-topbar{display:flex}
+  .docs-layout{grid-template-columns:1fr;min-height:auto}
+  .docs-sidebar,.docs-toc{display:none}
+  .doc-section{padding:28px 18px 60px}
+  .doc-title{font-size:34px}
+  .doc-lead{font-size:15px}
+  .doc-body h2{font-size:26px;margin:36px 0 12px;padding-top:36px}
+  .doc-body h3{font-size:18px;margin:26px 0 10px}
+  .doc-body p,.doc-body li{font-size:14.5px}
+  .models-grid,.sdk-grid{grid-template-columns:1fr}
+  .cb-body pre{font-size:12px}
+  .param-table{font-size:13px}
+  .param-table td,.param-table th{padding:10px 12px}
+  .err-row{grid-template-columns:60px 1fr}
+  .err-c.type{display:none}
+  footer{padding:24px 18px;flex-direction:column;gap:14px}
+  .foot-links{flex-wrap:wrap;gap:12px}
+  .step-guide::before{left:16px}
+  .step-num{width:32px;height:32px;font-size:13px}
+  .doc-nav-footer{flex-direction:column;gap:10px}
+  .doc-nav-btn{max-width:100%}
+  .doc-nav-btn.next{align-items:flex-start}
+  table{font-size:12.5px}
+  th,td{padding:10px 12px}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<!-- MOBILE TOP BAR -->
+<div class="mob-topbar" id="mob-topbar">
+  <div class="mob-brand" onclick="showDoc('introduction')">
+    <svg width="22" height="22" viewBox="0 0 100 100"><defs><radialGradient id="mg1" cx="28%" cy="28%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#9ab4ec"/></radialGradient><radialGradient id="mg2" cx="72%" cy="28%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#9ab4ec"/></radialGradient><radialGradient id="mg3" cx="28%" cy="72%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#7ba4e8"/></radialGradient><radialGradient id="mg4" cx="72%" cy="72%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#7ba4e8"/></radialGradient></defs><path d="M50 45C43 25,17 16,10 30C4 43,18 62,50 49Z" fill="url(#mg1)"/><path d="M50 45C57 25,83 16,90 30C96 43,82 62,50 49Z" fill="url(#mg2)"/><path d="M50 54C38 58,16 71,21 82C27 91,44 86,50 60Z" fill="url(#mg3)"/><path d="M50 54C62 58,84 71,79 82C73 91,56 86,50 60Z" fill="url(#mg4)"/><ellipse cx="50" cy="51" rx="2.2" ry="9" fill="#c4d4f2" opacity=".85"/></svg>
+    Area Docs
+  </div>
+  <div class="mob-menu-btn" onclick="openDrawer()"><span></span><span></span><span></span></div>
+</div>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-drawer" id="mob-drawer">
+  <div class="mob-drawer-bg" onclick="closeDrawer()"></div>
+  <div class="mob-drawer-panel">
+    <div class="mob-drawer-close"><div class="mob-close-btn" onclick="closeDrawer()">&times;</div></div>
+    <div class="sb-group-label">Get Started</div>
+    <div class="sb-item" onclick="showDocM('introduction')">Introduction</div>
+    <div class="sb-item" onclick="showDocM('quickstart')">Quickstart</div>
+    <div class="sb-item" onclick="showDocM('install')">Installation &amp; SDKs</div>
+    <div class="sb-item" onclick="showDocM('authentication')">Authentication</div>
+    <div class="sb-divider"></div>
+    <div class="sb-group-label">Core Concepts</div>
+    <div class="sb-item" onclick="showDocM('messages')">Messages API</div>
+    <div class="sb-item" onclick="showDocM('models')">Models</div>
+    <div class="sb-item" onclick="showDocM('system-prompts')">System Prompts</div>
+    <div class="sb-item" onclick="showDocM('context-windows')">Context Windows</div>
+    <div class="sb-item" onclick="showDocM('streaming')">Streaming</div>
+    <div class="sb-item" onclick="showDocM('tool-use')">Tool Use <span class="sb-badge">Popular</span></div>
+    <div class="sb-divider"></div>
+    <div class="sb-group-label">Capabilities</div>
+    <div class="sb-item" onclick="showDocM('vision')">Vision &amp; Images</div>
+    <div class="sb-item" onclick="showDocM('documents')">Document Processing</div>
+    <div class="sb-item" onclick="showDocM('extended-thinking')">Extended Thinking <span class="sb-badge beta">Beta</span></div>
+    <div class="sb-item" onclick="showDocM('prompt-caching')">Prompt Caching <span class="sb-badge new">New</span></div>
+    <div class="sb-item" onclick="showDocM('batch-api')">Batch API</div>
+    <div class="sb-item" onclick="showDocM('embeddings')">Embeddings</div>
+    <div class="sb-divider"></div>
+    <div class="sb-group-label">Best Practices</div>
+    <div class="sb-item" onclick="showDocM('prompt-engineering')">Prompt Engineering</div>
+    <div class="sb-item" onclick="showDocM('safety')">Safety Guidelines</div>
+    <div class="sb-item" onclick="showDocM('errors')">Errors &amp; Rate Limits</div>
+    <div class="sb-item" onclick="showDocM('testing')">Testing &amp; Evals</div>
+    <div class="sb-divider"></div>
+    <div class="sb-group-label">Resources</div>
+    <div class="sb-item" onclick="showDocM('migration')">Migration Guide</div>
+    <div class="sb-item" onclick="showDocM('changelog-doc')">Changelog</div>
+    <div class="sb-item" onclick="showDocM('support')">Support</div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-brand" onclick="showDoc('introduction')">
+    <svg width="26" height="26" viewBox="0 0 100 100"><defs><radialGradient id="g1" cx="28%" cy="28%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#9ab4ec"/></radialGradient><radialGradient id="g2" cx="72%" cy="28%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#9ab4ec"/></radialGradient><radialGradient id="g3" cx="28%" cy="72%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#7ba4e8"/></radialGradient><radialGradient id="g4" cx="72%" cy="72%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#7ba4e8"/></radialGradient></defs><path d="M50 45C43 25,17 16,10 30C4 43,18 62,50 49Z" fill="url(#g1)"/><path d="M50 45C57 25,83 16,90 30C96 43,82 62,50 49Z" fill="url(#g2)"/><path d="M50 54C38 58,16 71,21 82C27 91,44 86,50 60Z" fill="url(#g3)"/><path d="M50 54C62 58,84 71,79 82C73 91,56 86,50 60Z" fill="url(#g4)"/><ellipse cx="50" cy="51" rx="2.2" ry="9" fill="#c4d4f2" opacity=".85"/></svg>
+    <span class="nav-brand-name">Area</span>
+  </div>
+  <div class="nav-divider"></div>
+  <span class="nav-section">Docs</span>
+  <div class="nav-links">
+    <span class="nav-link active">Documentation</span>
+    <span class="nav-link">API Reference</span>
+    <span class="nav-link">Cookbook</span>
+    <span class="nav-link">Changelog</span>
+  </div>
+  <div class="nav-right">
+    <div class="search-box">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="#a8a89a" stroke-width="1.3"/><path d="M9 9l2.5 2.5" stroke="#a8a89a" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Search docs&hellip;
+      <span class="search-kbd">&#8984;K</span>
+    </div>
+    <button class="btn btn-dark">Console</button>
+  </div>
+</nav>
+
+<div class="docs-layout">
+
+<!-- SIDEBAR -->
+<aside class="docs-sidebar">
+  <div class="sb-group-label">Get Started</div>
+  <div class="sb-item active" onclick="showDoc('introduction')">Introduction</div>
+  <div class="sb-item" onclick="showDoc('quickstart')">Quickstart</div>
+  <div class="sb-item" onclick="showDoc('install')">Installation &amp; SDKs</div>
+  <div class="sb-item" onclick="showDoc('authentication')">Authentication</div>
+  <div class="sb-divider"></div>
+  <div class="sb-group-label">Core Concepts</div>
+  <div class="sb-item" onclick="showDoc('messages')">Messages API</div>
+  <div class="sb-item" onclick="showDoc('models')">Models</div>
+  <div class="sb-item" onclick="showDoc('system-prompts')">System Prompts</div>
+  <div class="sb-item" onclick="showDoc('context-windows')">Context Windows</div>
+  <div class="sb-item" onclick="showDoc('streaming')">Streaming</div>
+  <div class="sb-item" onclick="showDoc('tool-use')">Tool Use <span class="sb-badge">Popular</span></div>
+  <div class="sb-divider"></div>
+  <div class="sb-group-label">Capabilities</div>
+  <div class="sb-item" onclick="showDoc('vision')">Vision &amp; Images</div>
+  <div class="sb-item" onclick="showDoc('documents')">Document Processing</div>
+  <div class="sb-item" onclick="showDoc('extended-thinking')">Extended Thinking <span class="sb-badge beta">Beta</span></div>
+  <div class="sb-item" onclick="showDoc('prompt-caching')">Prompt Caching <span class="sb-badge new">New</span></div>
+  <div class="sb-item" onclick="showDoc('batch-api')">Batch API</div>
+  <div class="sb-item" onclick="showDoc('embeddings')">Embeddings</div>
+  <div class="sb-divider"></div>
+  <div class="sb-group-label">Best Practices</div>
+  <div class="sb-item" onclick="showDoc('prompt-engineering')">Prompt Engineering</div>
+  <div class="sb-item" onclick="showDoc('safety')">Safety Guidelines</div>
+  <div class="sb-item" onclick="showDoc('errors')">Errors &amp; Rate Limits</div>
+  <div class="sb-item" onclick="showDoc('testing')">Testing &amp; Evals</div>
+  <div class="sb-divider"></div>
+  <div class="sb-group-label">Resources</div>
+  <div class="sb-item" onclick="showDoc('migration')">Migration Guide</div>
+  <div class="sb-item" onclick="showDoc('changelog-doc')">Changelog</div>
+  <div class="sb-item" onclick="showDoc('support')">Support</div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="docs-main" id="docs-main">
+<!-- INTRODUCTION -->
+<div class="doc-section active" id="doc-introduction">
+<div class="doc-header">
+  <div class="doc-eyebrow">Get Started</div>
+  <h1 class="doc-title">Introduction</h1>
+  <p class="doc-lead">Area is a powerful AI platform that gives you access to state-of-the-art language models through a simple, flexible API. Build intelligent applications, automate workflows, and create new experiences at scale.</p>
+  <div class="doc-meta"><span class="doc-meta-item">&#128214; 15 min read</span><span class="doc-meta-item">Updated April 2025</span></div>
+</div>
+<div class="doc-body">
+<h2>What is Area?</h2>
+<p>Area provides developer access to AI models through a REST API. Whether you're building a chatbot, automating document processing, writing code assistants, or creating any AI-powered product, Area gives you the building blocks to do it reliably and at scale.</p>
+<p>Our models are trained with an emphasis on being helpful, harmless, and honest — making them well-suited for real-world deployment where safety and reliability are non-negotiable.</p>
+<div class="callout tip"><span class="callout-icon">&#128161;</span><div class="callout-body"><strong>New to Area?</strong> Start with the <span onclick="showDoc('quickstart')" style="cursor:pointer;text-decoration:underline">Quickstart guide</span> to make your first API call in under 5 minutes.</div></div>
+
+<h2>The Area Model Family</h2>
+<p>Area offers three classes of models optimized for different needs. All models share the same API interface.</p>
+<div class="models-grid">
+  <div class="model-card flagship">
+    <div class="mc-badge">Most Capable</div>
+    <div class="mc-name">Area Opus</div>
+    <div class="mc-id">area-opus-3</div>
+    <div class="mc-desc">Our most intelligent model. Complex analysis, nuanced reasoning, and deep expertise across domains.</div>
+    <div class="mc-specs">
+      <div class="mc-spec"><span class="mc-sk">Context window</span><span class="mc-sv">200K tokens</span></div>
+      <div class="mc-spec"><span class="mc-sk">Input cost</span><span class="mc-sv">$15 / MTok</span></div>
+      <div class="mc-spec"><span class="mc-sk">Output cost</span><span class="mc-sv">$75 / MTok</span></div>
+    </div>
+  </div>
+  <div class="model-card">
+    <div class="mc-badge">Best Balance</div>
+    <div class="mc-name">Area Sonnet</div>
+    <div class="mc-id">area-sonnet-3-5</div>
+    <div class="mc-desc">High performance and speed at reasonable cost. Ideal for most production workloads.</div>
+    <div class="mc-specs">
+      <div class="mc-spec"><span class="mc-sk">Context window</span><span class="mc-sv">200K tokens</span></div>
+      <div class="mc-spec"><span class="mc-sk">Input cost</span><span class="mc-sv">$3 / MTok</span></div>
+      <div class="mc-spec"><span class="mc-sk">Output cost</span><span class="mc-sv">$15 / MTok</span></div>
+    </div>
+  </div>
+  <div class="model-card">
+    <div class="mc-badge">Fastest &amp; Cheapest</div>
+    <div class="mc-name">Area Haiku</div>
+    <div class="mc-id">area-haiku-3-5</div>
+    <div class="mc-desc">Compact and lightning-fast. Perfect for high-volume tasks and latency-sensitive applications.</div>
+    <div class="mc-specs">
+      <div class="mc-spec"><span class="mc-sk">Context window</span><span class="mc-sv">200K tokens</span></div>
+      <div class="mc-spec"><span class="mc-sk">Input cost</span><span class="mc-sv">$0.80 / MTok</span></div>
+      <div class="mc-spec"><span class="mc-sk">Output cost</span><span class="mc-sv">$4 / MTok</span></div>
+    </div>
+  </div>
+</div>
+
+<h2>Core Capabilities</h2>
+<h3>Text Generation</h3>
+<p>Send a prompt, get an intelligent response. The models understand context, follow instructions, maintain coherent conversations over many turns, and produce output in virtually any format — prose, code, JSON, markdown, or structured data.</p>
+<h3>Vision &amp; Multimodal Input</h3>
+<p>All Area models accept image inputs alongside text. Send screenshots, photos, diagrams, documents, and charts — the model reads them natively. PDFs up to 32 MB and 100 pages are supported.</p>
+<h3>Tool Use (Function Calling)</h3>
+<p>Define tools with typed parameters and the model decides when to call them. Enables AI agents that can search the web, query databases, call APIs, write and execute code, and more. Fully composable for multi-step agentic workflows.</p>
+<h3>Streaming</h3>
+<p>Stream responses token-by-token for real-time user experiences using server-sent events (SSE). First-token latency under 300ms on most requests.</p>
+<h3>Extended Thinking</h3>
+<p>Enable extended thinking on Opus and Sonnet to have the model reason step-by-step before answering. Significantly improves performance on math, coding, logic, and multi-step reasoning tasks.</p>
+<h3>Prompt Caching</h3>
+<p>Cache frequently-used portions of prompts and save up to 90% on input token costs. Cache lifetime is 5 minutes with automatic refresh on use.</p>
+
+<h2>API Design Principles</h2>
+<ul>
+  <li><strong>REST-based:</strong> Standard HTTP verbs, JSON request and response bodies, stateless architecture.</li>
+  <li><strong>Versioned:</strong> API versioned via a required header so we can evolve without breaking integrations.</li>
+  <li><strong>Idiomatic SDKs:</strong> Official Python and TypeScript SDKs with full type safety, streaming helpers, and retry logic.</li>
+  <li><strong>Predictable errors:</strong> Structured error responses with machine-readable codes and actionable guidance.</li>
+  <li><strong>Generous limits:</strong> High default rate limits, per-token pricing with no minimums, usage tiers that grow with you.</li>
+</ul>
+
+<h2>Getting an API Key</h2>
+<div class="step-guide">
+  <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Create an account</div><div class="step-desc">Sign up at <code>area.ai/signup</code> with your Google account or email. No credit card required — free credits are included.</div></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open the Console</div><div class="step-desc">Go to the Developer Console, then to the API Keys section. A default key is created automatically on signup.</div></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Copy your key</div><div class="step-desc">Click "Show key" and copy it securely. Treat it like a password — never commit it to version control.</div></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Make your first call</div><div class="step-desc">Set <code>AREA_API_KEY</code> as an environment variable and follow the Quickstart to send your first message.</div></div></div>
+</div>
+<div class="doc-nav-footer">
+  <div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('quickstart')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Quickstart</div></div>
+</div>
+</div>
+</div>
+<!-- QUICKSTART -->
+<div class="doc-section" id="doc-quickstart">
+<div class="doc-header">
+  <div class="doc-eyebrow">Get Started</div>
+  <h1 class="doc-title">Quickstart</h1>
+  <p class="doc-lead">Make your first API call in under 5 minutes. Install the SDK, set your key, and start building.</p>
+  <div class="doc-meta"><span class="doc-meta-item">&#128214; 8 min read</span></div>
+</div>
+<div class="doc-body">
+<h2>Prerequisites</h2>
+<ul>
+  <li>An Area API key from <strong>Console &rarr; API Keys</strong></li>
+  <li>Python 3.8+ or Node.js 18+</li>
+</ul>
+
+<h2>Step 1 &mdash; Install the SDK</h2>
+<div class="sdk-grid">
+  <div class="sdk-card"><div class="sdk-icon" style="background:#f0f9ff">&#127822;</div><div class="sdk-name">Python SDK</div><div class="sdk-install">pip install area-ai</div><div class="sdk-ver">Latest: v0.34.2</div></div>
+  <div class="sdk-card"><div class="sdk-icon" style="background:#fefce8">&#128230;</div><div class="sdk-name">TypeScript / Node</div><div class="sdk-install">npm install @area-ai/sdk</div><div class="sdk-ver">Latest: v0.34.2</div></div>
+</div>
+
+<h2>Step 2 &mdash; Set Your API Key</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">bash</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="cmt"># macOS / Linux</span>
+<span class="kw">export</span> <span class="var">AREA_API_KEY</span>=<span class="str">"sk-area-..."</span>
+
+<span class="cmt"># Add to ~/.zshrc for persistence</span>
+<span class="kw">echo</span> <span class="str">'export AREA_API_KEY="sk-area-..."'</span> >> ~/.zshrc</pre></div></div>
+
+<h2>Step 3 &mdash; Send Your First Message</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-tabs"><div class="cb-tab on">Python</div><div class="cb-tab">TypeScript</div><div class="cb-tab">cURL</div></div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">area</span>
+
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>()
+
+<span class="var">message</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+    <span class="prop">messages</span>=[
+        {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello, Area! What can you help me with?"</span>}
+    ]
+)
+
+<span class="fn">print</span>(<span class="var">message</span>.<span class="prop">content</span>[<span class="num">0</span>].<span class="prop">text</span>)</pre></div></div>
+
+<h3>Expected Response</h3>
+<div class="response-preview">
+  <div class="rp-head"><span class="rp-status ok">200 OK</span><span class="rp-path">POST /v1/messages</span></div>
+  <div class="rp-body"><pre>{
+  "id": "msg_01XFDUDYJgAACzvnptvVoYEL",
+  "type": "message",
+  "role": "assistant",
+  "content": [{ "type": "text", "text": "Hello! I can help you with analysis, writing, coding, research, and much more. What would you like to work on?" }],
+  "model": "area-sonnet-3-5-20241022",
+  "stop_reason": "end_turn",
+  "usage": { "input_tokens": 14, "output_tokens": 32 }
+}</pre></div>
+</div>
+
+<h2>Step 4 &mdash; Add a System Prompt</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">message</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+    <span class="prop">system</span>=<span class="str">"""You are a helpful customer support agent for Acme Corp.
+Always be polite, concise, and solution-focused.
+If you cannot resolve an issue, offer to escalate to a human agent."""</span>,
+    <span class="prop">messages</span>=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"My order hasn't arrived yet"</span>}]
+)</pre></div></div>
+
+<h2>Step 5 &mdash; Multi-Turn Conversation</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">history</span> = []
+
+<span class="kw">def</span> <span class="fn">chat</span>(<span class="var">user_msg</span>):
+    <span class="var">history</span>.<span class="fn">append</span>({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="var">user_msg</span>})
+    <span class="var">resp</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+        <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+        <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+        <span class="prop">messages</span>=<span class="var">history</span>
+    )
+    <span class="var">text</span> = <span class="var">resp</span>.<span class="prop">content</span>[<span class="num">0</span>].<span class="prop">text</span>
+    <span class="var">history</span>.<span class="fn">append</span>({<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="var">text</span>})
+    <span class="kw">return</span> <span class="var">text</span>
+
+<span class="fn">print</span>(<span class="fn">chat</span>(<span class="str">"What is the capital of France?"</span>))
+<span class="fn">print</span>(<span class="fn">chat</span>(<span class="str">"What is the population of that city?"</span>))
+<span class="fn">print</span>(<span class="fn">chat</span>(<span class="str">"Name 3 famous landmarks there"</span>))</pre></div></div>
+
+<div class="callout info"><span class="callout-icon">&#8505;&#65039;</span><div class="callout-body"><strong>Stateless API:</strong> Area's API stores no conversation history. You must send the full history with every request. This gives you complete control and privacy over conversation data.</div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('introduction')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Introduction</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('install')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Installation &amp; SDKs</div></div>
+</div>
+</div>
+</div>
+
+<!-- INSTALLATION -->
+<div class="doc-section" id="doc-install">
+<div class="doc-header">
+  <div class="doc-eyebrow">Get Started</div>
+  <h1 class="doc-title">Installation &amp; SDKs</h1>
+  <p class="doc-lead">Official SDKs for Python and TypeScript with streaming helpers, automatic retries, and full type safety. All SDKs are open source on GitHub.</p>
+</div>
+<div class="doc-body">
+<h2>Python SDK</h2>
+<p>Supports Python 3.8+. Includes both sync and async clients.</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">bash</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>pip install area-ai</pre></div></div>
+
+<h3>Sync Client</h3>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">area</span>
+
+<span class="cmt"># Reads AREA_API_KEY from environment automatically</span>
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>()
+
+<span class="cmt"># Or pass explicitly</span>
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>(<span class="prop">api_key</span>=<span class="str">"sk-area-..."</span>)
+
+<span class="cmt"># Configure retries, timeout, base URL</span>
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>(
+    <span class="prop">max_retries</span>=<span class="num">3</span>,
+    <span class="prop">timeout</span>=<span class="num">30.0</span>,
+)</pre></div></div>
+
+<h3>Async Client</h3>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">asyncio</span>
+<span class="kw">import</span> <span class="var">area</span>
+
+<span class="var">client</span> = <span class="cls">area</span>.<span class="cls">AsyncArea</span>()
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    <span class="var">msg</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+        <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+        <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+        <span class="prop">messages</span>=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello"</span>}]
+    )
+    <span class="fn">print</span>(<span class="var">msg</span>.<span class="prop">content</span>[<span class="num">0</span>].<span class="prop">text</span>)
+
+<span class="var">asyncio</span>.<span class="fn">run</span>(<span class="fn">main</span>())</pre></div></div>
+
+<h2>TypeScript / Node.js SDK</h2>
+<p>Full TypeScript support with complete type definitions. Works in Node.js 18+, Deno, Bun, and modern edge runtimes (Vercel Edge, Cloudflare Workers).</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">bash</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>npm install @area-ai/sdk
+<span class="cmt"># or: yarn add @area-ai/sdk  |  pnpm add @area-ai/sdk</span></pre></div></div>
+
+<div class="code-block"><div class="cb-head"><div class="cb-lang">typescript</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="cls">Area</span> <span class="kw">from</span> <span class="str">"@area-ai/sdk"</span>;
+
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="cls">Area</span>(); <span class="cmt">// reads AREA_API_KEY env var</span>
+
+<span class="kw">const</span> <span class="var">message</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>({
+  model: <span class="str">"area-sonnet-3-5-20241022"</span>,
+  max_tokens: <span class="num">1024</span>,
+  messages: [{ role: <span class="str">"user"</span>, content: <span class="str">"Hello!"</span> }],
+});
+
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">message</span>.<span class="prop">content</span>[<span class="num">0</span>]);
+<span class="cmt">// { type: "text", text: "Hello! How can I help you today?" }</span></pre></div></div>
+
+<h2>Direct REST API</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">bash</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>curl https://api.area.ai/v1/messages \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -H <span class="str">"x-api-key: $AREA_API_KEY"</span> \
+  -H <span class="str">"area-version: 2024-01-01"</span> \
+  -d <span class="str">'{"model":"area-sonnet-3-5-20241022","max_tokens":1024,"messages":[{"role":"user","content":"Hello"}]}'</span></pre></div></div>
+
+<h2>Required Headers</h2>
+<table><thead><tr><th>Header</th><th>Value</th><th>Required</th></tr></thead>
+<tbody>
+  <tr><td><code>x-api-key</code></td><td>Your Area API key</td><td><span class="pill pill-orange">Required</span></td></tr>
+  <tr><td><code>area-version</code></td><td><code>2024-01-01</code></td><td><span class="pill pill-orange">Required</span></td></tr>
+  <tr><td><code>Content-Type</code></td><td><code>application/json</code></td><td><span class="pill pill-orange">Required</span></td></tr>
+  <tr><td><code>Accept</code></td><td><code>text/event-stream</code> (streaming only)</td><td><span class="pill pill-gray">Optional</span></td></tr>
+</tbody></table>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('quickstart')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Quickstart</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('messages')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Messages API</div></div>
+</div>
+</div>
+</div>
+<!-- MESSAGES API -->
+<div class="doc-section" id="doc-messages">
+<div class="doc-header">
+  <div class="doc-eyebrow">Core Concepts</div>
+  <h1 class="doc-title">Messages API</h1>
+  <p class="doc-lead">The primary interface for interacting with Area models. Send a structured conversation, receive a structured response. Everything in Area flows through this single endpoint.</p>
+  <div class="doc-meta"><span class="doc-meta-item">&#128214; 12 min read</span></div>
+</div>
+<div class="doc-body">
+<h2>Endpoint</h2>
+<div class="response-preview"><div class="rp-head"><span class="rp-status post">POST</span><span class="rp-path">https://api.area.ai/v1/messages</span></div></div>
+
+<h2>Request Parameters</h2>
+<table class="param-table"><thead class="pt-head"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+  <tr><td><span class="pname">model</span><span class="req">Required</span></td><td><span class="ptype">string</span></td><td>The model ID. Example: <code>area-sonnet-3-5-20241022</code>. See Models page for all IDs.</td></tr>
+  <tr><td><span class="pname">messages</span><span class="req">Required</span></td><td><span class="ptype">array</span></td><td>Array of message objects. Each has <code>role</code> (<code>"user"</code> or <code>"assistant"</code>) and <code>content</code>. Must alternate user/assistant and end with a user message.</td></tr>
+  <tr><td><span class="pname">max_tokens</span><span class="req">Required</span></td><td><span class="ptype">integer</span></td><td>Max tokens to generate. Varies by model. Too low may truncate responses.</td></tr>
+  <tr><td><span class="pname">system</span><span class="opt">Optional</span></td><td><span class="ptype">string</span></td><td>System prompt defining the assistant's role, constraints, and context. Persists for the entire conversation.</td></tr>
+  <tr><td><span class="pname">temperature</span><span class="opt">Optional</span></td><td><span class="ptype">number</span></td><td>Sampling temperature 0&ndash;1. Higher = more random. Default: 1.0. Use 0 for deterministic output.</td></tr>
+  <tr><td><span class="pname">top_p</span><span class="opt">Optional</span></td><td><span class="ptype">number</span></td><td>Nucleus sampling. Sample from tokens comprising the top P probability mass. Range: 0&ndash;1.</td></tr>
+  <tr><td><span class="pname">top_k</span><span class="opt">Optional</span></td><td><span class="ptype">integer</span></td><td>Only sample from the top K tokens. Reduces low-probability long-tail responses.</td></tr>
+  <tr><td><span class="pname">stop_sequences</span><span class="opt">Optional</span></td><td><span class="ptype">array</span></td><td>Up to 8192 custom sequences that halt generation when encountered. Not included in the response.</td></tr>
+  <tr><td><span class="pname">stream</span><span class="opt">Optional</span></td><td><span class="ptype">boolean</span></td><td>Stream responses via server-sent events. Response body becomes a stream of events instead of a single JSON object.</td></tr>
+  <tr><td><span class="pname">tools</span><span class="opt">Optional</span></td><td><span class="ptype">array</span></td><td>Tool definitions the model may call. Each tool has <code>name</code>, <code>description</code>, and <code>input_schema</code> (JSON Schema).</td></tr>
+  <tr><td><span class="pname">tool_choice</span><span class="opt">Optional</span></td><td><span class="ptype">object</span></td><td><code>{"type":"auto"}</code> (default), <code>{"type":"any"}</code> (must use a tool), or <code>{"type":"tool","name":"fn"}</code> (specific tool).</td></tr>
+  <tr><td><span class="pname">metadata</span><span class="opt">Optional</span></td><td><span class="ptype">object</span></td><td>Optional metadata. Supports <code>user_id</code> (string, max 256 chars) for abuse detection and monitoring.</td></tr>
+</tbody></table>
+
+<h2>Response Object</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">json</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>{
+  <span class="str">"id"</span>: <span class="str">"msg_01XFDUDYJgAACzvnptvVoYEL"</span>,
+  <span class="str">"type"</span>: <span class="str">"message"</span>,
+  <span class="str">"role"</span>: <span class="str">"assistant"</span>,
+  <span class="str">"content"</span>: [
+    { <span class="str">"type"</span>: <span class="str">"text"</span>, <span class="str">"text"</span>: <span class="str">"The response text..."</span> }
+  ],
+  <span class="str">"model"</span>: <span class="str">"area-sonnet-3-5-20241022"</span>,
+  <span class="str">"stop_reason"</span>: <span class="str">"end_turn"</span>,
+  <span class="str">"stop_sequence"</span>: <span class="kw">null</span>,
+  <span class="str">"usage"</span>: {
+    <span class="str">"input_tokens"</span>: <span class="num">25</span>,
+    <span class="str">"output_tokens"</span>: <span class="num">189</span>
+  }
+}</pre></div></div>
+
+<h3>stop_reason Values</h3>
+<table><thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+<tbody>
+  <tr><td><code>end_turn</code></td><td>Model completed its response naturally</td></tr>
+  <tr><td><code>max_tokens</code></td><td>Hit <code>max_tokens</code> limit — increase it or use continuation</td></tr>
+  <tr><td><code>stop_sequence</code></td><td>A custom stop sequence was encountered</td></tr>
+  <tr><td><code>tool_use</code></td><td>Model is requesting a tool call — provide results and continue</td></tr>
+</tbody></table>
+
+<h2>Content Blocks</h2>
+<p>The <code>content</code> field is an array of typed blocks, allowing mixing of text, images, tool calls, and tool results in a single message.</p>
+<h3>Text Block</h3>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">json</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>{ <span class="str">"type"</span>: <span class="str">"text"</span>, <span class="str">"text"</span>: <span class="str">"Your message here"</span> }</pre></div></div>
+
+<h3>Image Block (Base64)</h3>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">json</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>{
+  <span class="str">"type"</span>: <span class="str">"image"</span>,
+  <span class="str">"source"</span>: {
+    <span class="str">"type"</span>: <span class="str">"base64"</span>,
+    <span class="str">"media_type"</span>: <span class="str">"image/jpeg"</span>,
+    <span class="str">"data"</span>: <span class="str">"&lt;base64-encoded-data&gt;"</span>
+  }
+}</pre></div></div>
+
+<h3>Image Block (URL)</h3>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">json</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>{
+  <span class="str">"type"</span>: <span class="str">"image"</span>,
+  <span class="str">"source"</span>: {
+    <span class="str">"type"</span>: <span class="str">"url"</span>,
+    <span class="str">"url"</span>: <span class="str">"https://example.com/image.png"</span>
+  }
+}</pre></div></div>
+
+<h3>Tool Use Block (in assistant response)</h3>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">json</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>{
+  <span class="str">"type"</span>: <span class="str">"tool_use"</span>,
+  <span class="str">"id"</span>: <span class="str">"toolu_01A09q90qw90lq917835lq9"</span>,
+  <span class="str">"name"</span>: <span class="str">"get_weather"</span>,
+  <span class="str">"input"</span>: { <span class="str">"location"</span>: <span class="str">"Mumbai, India"</span>, <span class="str">"unit"</span>: <span class="str">"celsius"</span> }
+}</pre></div></div>
+
+<h3>Tool Result Block (in user message)</h3>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">json</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>{
+  <span class="str">"type"</span>: <span class="str">"tool_result"</span>,
+  <span class="str">"tool_use_id"</span>: <span class="str">"toolu_01A09q90qw90lq917835lq9"</span>,
+  <span class="str">"content"</span>: <span class="str">"{\"temperature\": 32, \"condition\": \"partly cloudy\"}"</span>
+}</pre></div></div>
+
+<h2>Full Example</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-tabs"><div class="cb-tab on">Python</div><div class="cb-tab">TypeScript</div><div class="cb-tab">cURL</div></div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">area</span>
+
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>()
+
+<span class="var">response</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">2048</span>,
+    <span class="prop">system</span>=<span class="str">"You are an expert code reviewer. Be concise and specific."</span>,
+    <span class="prop">temperature</span>=<span class="num">0.3</span>,
+    <span class="prop">messages</span>=[
+        {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Review this function for bugs and improvements"</span>},
+        {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"I'll review the function you've shared."</span>},
+        {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"def add(a,b): return a+b"</span>}
+    ],
+    <span class="prop">metadata</span>={<span class="str">"user_id"</span>: <span class="str">"user_123"</span>}
+)
+
+<span class="fn">print</span>(<span class="var">response</span>.<span class="prop">content</span>[<span class="num">0</span>].<span class="prop">text</span>)
+<span class="fn">print</span>(<span class="str">f"Tokens used: {response.usage.input_tokens} in, {response.usage.output_tokens} out"</span>)</pre></div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('install')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Installation &amp; SDKs</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('models')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Models</div></div>
+</div>
+</div>
+</div>
+
+<!-- MODELS -->
+<div class="doc-section" id="doc-models">
+<div class="doc-header">
+  <div class="doc-eyebrow">Core Concepts</div>
+  <h1 class="doc-title">Models</h1>
+  <p class="doc-lead">Area offers a family of models optimized for different performance, cost, and latency tradeoffs. All share the same API interface and support identical features.</p>
+</div>
+<div class="doc-body">
+<h2>Available Models</h2>
+<table><thead><tr><th>Model</th><th>API Identifier</th><th>Context</th><th>Input $/MTok</th><th>Output $/MTok</th></tr></thead>
+<tbody>
+  <tr><td><strong>Area Opus 3</strong></td><td><code>area-opus-3-20240229</code></td><td>200K</td><td>$15.00</td><td>$75.00</td></tr>
+  <tr><td><strong>Area Sonnet 3.7</strong></td><td><code>area-sonnet-3-7-20250219</code></td><td>200K</td><td>$3.00</td><td>$15.00</td></tr>
+  <tr><td><strong>Area Sonnet 3.5</strong></td><td><code>area-sonnet-3-5-20241022</code></td><td>200K</td><td>$3.00</td><td>$15.00</td></tr>
+  <tr><td><strong>Area Haiku 3.5</strong></td><td><code>area-haiku-3-5-20241022</code></td><td>200K</td><td>$0.80</td><td>$4.00</td></tr>
+  <tr><td><strong>Area Haiku 3</strong></td><td><code>area-haiku-3-20240307</code></td><td>200K</td><td>$0.25</td><td>$1.25</td></tr>
+</tbody></table>
+
+<div class="callout info"><span class="callout-icon">&#8505;&#65039;</span><div class="callout-body"><strong>Pin your model version.</strong> Always use a specific versioned ID like <code>area-sonnet-3-5-20241022</code> in production. The unversioned aliases (<code>area-sonnet-latest</code>) may change behavior without notice when we release new versions.</div></div>
+
+<h2>Choosing a Model</h2>
+<h3>Area Opus &mdash; Maximum Intelligence</h3>
+<p>Use Opus when accuracy and capability matter most: complex multi-step reasoning, nuanced writing, code generation with deep logic, research synthesis, and tasks where the cost of errors is high. Consistently achieves the best results across all benchmarks.</p>
+<p><strong>Best for:</strong> Complex analysis, PhD-level reasoning, long-form research, high-stakes code generation, nuanced creative work.</p>
+
+<h3>Area Sonnet &mdash; Optimal for Production</h3>
+<p>Sonnet delivers excellent performance at 5&times; lower cost than Opus. Most production workloads achieve nearly Opus-level quality at a fraction of the price. The latest Sonnet (3.5) outperforms Opus 3 on many coding benchmarks.</p>
+<p><strong>Best for:</strong> Customer support agents, code review, data analysis, content generation, RAG pipelines, agentic workflows.</p>
+
+<h3>Area Haiku &mdash; Speed and Efficiency</h3>
+<p>Area's fastest and most affordable model. Sub-second latency for most requests. Haiku 3.5 is significantly more capable than Haiku 3 and includes full vision and tool use support.</p>
+<p><strong>Best for:</strong> High-volume classification, simple Q&amp;A, entity extraction, real-time autocomplete, latency-critical features.</p>
+
+<h2>Feature Support</h2>
+<table><thead><tr><th>Feature</th><th>Opus 3</th><th>Sonnet 3.7</th><th>Sonnet 3.5</th><th>Haiku 3.5</th><th>Haiku 3</th></tr></thead>
+<tbody>
+  <tr><td>Text generation</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td></tr>
+  <tr><td>Vision (images)</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td></tr>
+  <tr><td>PDF documents</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#10060;</td></tr>
+  <tr><td>Tool use</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td></tr>
+  <tr><td>Streaming</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td></tr>
+  <tr><td>Extended thinking</td><td>&#9989;</td><td>&#9989;</td><td>&#10060;</td><td>&#10060;</td><td>&#10060;</td></tr>
+  <tr><td>Prompt caching</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td></tr>
+  <tr><td>Batch API</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td></tr>
+</tbody></table>
+
+<h2>Model Selection Code</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="cmt"># Use this helper to pick the right model for your task</span>
+<span class="kw">def</span> <span class="fn">pick_model</span>(<span class="var">complexity</span>: <span class="fn">str</span>) -> <span class="fn">str</span>:
+    <span class="kw">return</span> {
+        <span class="str">"max"</span>:    <span class="str">"area-opus-3-20240229"</span>,       <span class="cmt"># highest quality</span>
+        <span class="str">"high"</span>:   <span class="str">"area-sonnet-3-7-20250219"</span>,   <span class="cmt"># latest sonnet</span>
+        <span class="str">"medium"</span>: <span class="str">"area-sonnet-3-5-20241022"</span>,   <span class="cmt"># cost-optimized</span>
+        <span class="str">"low"</span>:    <span class="str">"area-haiku-3-5-20241022"</span>,    <span class="cmt"># fastest</span>
+    }[<span class="var">complexity</span>]</pre></div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('messages')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Messages API</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('streaming')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Streaming</div></div>
+</div>
+</div>
+</div>
+<!-- STREAMING -->
+<div class="doc-section" id="doc-streaming">
+<div class="doc-header">
+  <div class="doc-eyebrow">Core Concepts</div>
+  <h1 class="doc-title">Streaming</h1>
+  <p class="doc-lead">Stream responses token-by-token using server-sent events. First tokens arrive in under 300ms, making your app feel instant even for long outputs.</p>
+</div>
+<div class="doc-body">
+<h2>Why Stream?</h2>
+<p>Without streaming, users wait for the entire response — which can take seconds for long outputs. With streaming, text appears immediately as it is generated, dramatically improving perceived performance and user experience.</p>
+<p>Streaming is especially critical for: chatbots, code generation, long-form writing, interactive assistants, and any feature where latency is visible to the user.</p>
+
+<h2>Python — Stream Context Manager</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">area</span>
+
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>()
+
+<span class="cmt"># Recommended: streaming context manager</span>
+<span class="kw">with</span> <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">stream</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+    <span class="prop">messages</span>=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Write a poem about the ocean"</span>}]
+) <span class="kw">as</span> <span class="var">stream</span>:
+    <span class="kw">for</span> <span class="var">text</span> <span class="kw">in</span> <span class="var">stream</span>.<span class="fn">text_stream</span>:
+        <span class="fn">print</span>(<span class="var">text</span>, <span class="prop">end</span>=<span class="str">""</span>, <span class="prop">flush</span>=<span class="kw">True</span>)
+
+<span class="cmt"># Access the complete message after streaming ends</span>
+<span class="var">final</span> = <span class="var">stream</span>.<span class="fn">get_final_message</span>()
+<span class="fn">print</span>(<span class="str">f"
+Tokens: {final.usage.input_tokens} in, {final.usage.output_tokens} out"</span>)</pre></div></div>
+
+<h2>TypeScript — Async Iterator</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">typescript</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="cls">Area</span> <span class="kw">from</span> <span class="str">"@area-ai/sdk"</span>;
+
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="cls">Area</span>();
+
+<span class="kw">const</span> <span class="var">stream</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">stream</span>({
+  model: <span class="str">"area-sonnet-3-5-20241022"</span>,
+  max_tokens: <span class="num">1024</span>,
+  messages: [{ role: <span class="str">"user"</span>, content: <span class="str">"Write a poem about the ocean"</span> }],
+});
+
+<span class="cmt">// Option 1: stream text only</span>
+<span class="var">stream</span>.<span class="fn">on</span>(<span class="str">"text"</span>, (<span class="var">text</span>) => <span class="var">process</span>.<span class="prop">stdout</span>.<span class="fn">write</span>(<span class="var">text</span>));
+
+<span class="cmt">// Option 2: iterate all events</span>
+<span class="kw">for await</span> (<span class="kw">const</span> <span class="var">event</span> <span class="kw">of</span> <span class="var">stream</span>) {
+  <span class="kw">if</span> (<span class="var">event</span>.<span class="prop">type</span> === <span class="str">"content_block_delta"</span> &&
+      <span class="var">event</span>.<span class="prop">delta</span>.<span class="prop">type</span> === <span class="str">"text_delta"</span>) {
+    <span class="var">process</span>.<span class="prop">stdout</span>.<span class="fn">write</span>(<span class="var">event</span>.<span class="prop">delta</span>.<span class="prop">text</span>);
+  }
+}
+
+<span class="kw">const</span> <span class="var">final</span> = <span class="kw">await</span> <span class="var">stream</span>.<span class="fn">finalMessage</span>();
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">final</span>.<span class="prop">usage</span>);</pre></div></div>
+
+<h2>Raw SSE Events</h2>
+<table><thead><tr><th>Event</th><th>Description</th></tr></thead>
+<tbody>
+  <tr><td><code>message_start</code></td><td>Beginning of response. Contains message ID and initial usage.</td></tr>
+  <tr><td><code>content_block_start</code></td><td>A new content block is starting (text or tool_use).</td></tr>
+  <tr><td><code>content_block_delta</code></td><td>A chunk of content. For text: <code>{"type":"text_delta","text":"..."}</code>.</td></tr>
+  <tr><td><code>content_block_stop</code></td><td>Current content block has ended.</td></tr>
+  <tr><td><code>message_delta</code></td><td>Updates to top-level message fields (stop_reason, usage).</td></tr>
+  <tr><td><code>message_stop</code></td><td>Message is complete. Final event.</td></tr>
+  <tr><td><code>error</code></td><td>Error occurred. Stream terminates after this.</td></tr>
+</tbody></table>
+
+<h2>Streaming in a Web App (Next.js)</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">typescript</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="cmt">// app/api/chat/route.ts</span>
+<span class="kw">import</span> <span class="cls">Area</span> <span class="kw">from</span> <span class="str">"@area-ai/sdk"</span>;
+
+<span class="kw">export const</span> <span class="var">runtime</span> = <span class="str">"edge"</span>;
+
+<span class="kw">const</span> <span class="var">area</span> = <span class="kw">new</span> <span class="cls">Area</span>();
+
+<span class="kw">export async function</span> <span class="fn">POST</span>(<span class="var">req</span>: <span class="cls">Request</span>) {
+  <span class="kw">const</span> { <span class="var">messages</span> } = <span class="kw">await</span> <span class="var">req</span>.<span class="fn">json</span>();
+
+  <span class="kw">const</span> <span class="var">stream</span> = <span class="kw">await</span> <span class="var">area</span>.<span class="fn">messages</span>.<span class="fn">stream</span>({
+    model: <span class="str">"area-sonnet-3-5-20241022"</span>,
+    max_tokens: <span class="num">2048</span>,
+    messages,
+  });
+
+  <span class="kw">return</span> <span class="kw">new</span> <span class="cls">Response</span>(<span class="var">stream</span>.<span class="fn">toReadableStream</span>());
+}</pre></div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('models')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Models</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('tool-use')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Tool Use</div></div>
+</div>
+</div>
+</div>
+
+<!-- TOOL USE -->
+<div class="doc-section" id="doc-tool-use">
+<div class="doc-header">
+  <div class="doc-eyebrow">Core Concepts</div>
+  <h1 class="doc-title">Tool Use</h1>
+  <p class="doc-lead">Give Area models the ability to call your functions. Define tools with typed parameters and the model decides when and how to use them — enabling powerful AI agents that interact with real systems.</p>
+</div>
+<div class="doc-body">
+<h2>How Tool Use Works</h2>
+<div class="step-guide">
+  <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Define tools and send request</div><div class="step-desc">Include tool definitions in the <code>tools</code> parameter. The model evaluates the message and decides whether to call a tool.</div></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Model returns tool_use block</div><div class="step-desc">If calling a tool, the model responds with <code>stop_reason: "tool_use"</code> and a <code>tool_use</code> block containing the tool name and typed input.</div></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Execute tool in your code</div><div class="step-desc">Your application runs the tool with the provided input. Area never executes code — tool execution always happens on your side.</div></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Send results back</div><div class="step-desc">Append a <code>tool_result</code> block and make another API call. The model uses the result to generate a final natural-language response.</div></div></div>
+</div>
+
+<h2>Defining Tools</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">tools</span> = [
+  {
+    <span class="str">"name"</span>: <span class="str">"get_weather"</span>,
+    <span class="str">"description"</span>: <span class="str">"Get current weather for a city. Use when user asks about weather or temperature."</span>,
+    <span class="str">"input_schema"</span>: {
+      <span class="str">"type"</span>: <span class="str">"object"</span>,
+      <span class="str">"properties"</span>: {
+        <span class="str">"location"</span>: {
+          <span class="str">"type"</span>: <span class="str">"string"</span>,
+          <span class="str">"description"</span>: <span class="str">"City and country, e.g. Mumbai, India"</span>
+        },
+        <span class="str">"unit"</span>: {
+          <span class="str">"type"</span>: <span class="str">"string"</span>,
+          <span class="str">"enum"</span>: [<span class="str">"celsius"</span>, <span class="str">"fahrenheit"</span>],
+          <span class="str">"description"</span>: <span class="str">"Temperature unit. Default: celsius"</span>
+        }
+      },
+      <span class="str">"required"</span>: [<span class="str">"location"</span>]
+    }
+  },
+  {
+    <span class="str">"name"</span>: <span class="str">"search_database"</span>,
+    <span class="str">"description"</span>: <span class="str">"Search the product database for items matching a query."</span>,
+    <span class="str">"input_schema"</span>: {
+      <span class="str">"type"</span>: <span class="str">"object"</span>,
+      <span class="str">"properties"</span>: {
+        <span class="str">"query"</span>: {<span class="str">"type"</span>: <span class="str">"string"</span>, <span class="str">"description"</span>: <span class="str">"Search query"</span>},
+        <span class="str">"limit"</span>: {<span class="str">"type"</span>: <span class="str">"integer"</span>, <span class="str">"description"</span>: <span class="str">"Max results to return"</span>, <span class="str">"default"</span>: <span class="num">10</span>}
+      },
+      <span class="str">"required"</span>: [<span class="str">"query"</span>]
+    }
+  }
+]</pre></div></div>
+
+<h2>Full Tool Use Loop</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">json</span>, <span class="var">area</span>
+
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>()
+
+<span class="kw">def</span> <span class="fn">run_tool</span>(<span class="var">name</span>, <span class="var">inputs</span>):
+    <span class="kw">if</span> <span class="var">name</span> == <span class="str">"get_weather"</span>:
+        <span class="kw">return</span> {<span class="str">"temp"</span>: <span class="num">32</span>, <span class="str">"unit"</span>: <span class="str">"C"</span>, <span class="str">"condition"</span>: <span class="str">"sunny"</span>}
+    <span class="kw">elif</span> <span class="var">name</span> == <span class="str">"search_database"</span>:
+        <span class="kw">return</span> [{<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"name"</span>: <span class="str">"Widget Pro"</span>, <span class="str">"price"</span>: <span class="num">49.99</span>}]
+
+<span class="var">messages</span> = [{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"What's the weather in Mumbai?"</span>}]
+
+<span class="kw">while True</span>:
+    <span class="var">resp</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+        <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+        <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+        <span class="prop">tools</span>=<span class="var">tools</span>,
+        <span class="prop">messages</span>=<span class="var">messages</span>
+    )
+
+    <span class="cmt"># Done — model gave a final text response</span>
+    <span class="kw">if</span> <span class="var">resp</span>.<span class="prop">stop_reason</span> != <span class="str">"tool_use"</span>:
+        <span class="fn">print</span>(<span class="var">resp</span>.<span class="prop">content</span>[<span class="num">0</span>].<span class="prop">text</span>)
+        <span class="kw">break</span>
+
+    <span class="cmt"># Process all tool calls</span>
+    <span class="var">messages</span>.<span class="fn">append</span>({<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="var">resp</span>.<span class="prop">content</span>})
+    <span class="var">tool_results</span> = []
+
+    <span class="kw">for</span> <span class="var">block</span> <span class="kw">in</span> <span class="var">resp</span>.<span class="prop">content</span>:
+        <span class="kw">if</span> <span class="var">block</span>.<span class="prop">type</span> == <span class="str">"tool_use"</span>:
+            <span class="var">result</span> = <span class="fn">run_tool</span>(<span class="var">block</span>.<span class="prop">name</span>, <span class="var">block</span>.<span class="prop">input</span>)
+            <span class="var">tool_results</span>.<span class="fn">append</span>({
+                <span class="str">"type"</span>: <span class="str">"tool_result"</span>,
+                <span class="str">"tool_use_id"</span>: <span class="var">block</span>.<span class="prop">id</span>,
+                <span class="str">"content"</span>: <span class="var">json</span>.<span class="fn">dumps</span>(<span class="var">result</span>)
+            })
+
+    <span class="var">messages</span>.<span class="fn">append</span>({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="var">tool_results</span>})</pre></div></div>
+
+<h2>Tool Choice Options</h2>
+<table><thead><tr><th>Value</th><th>Behavior</th></tr></thead>
+<tbody>
+  <tr><td><code>{"type": "auto"}</code></td><td>Model decides whether to use a tool (default)</td></tr>
+  <tr><td><code>{"type": "any"}</code></td><td>Model must use at least one tool</td></tr>
+  <tr><td><code>{"type": "tool", "name": "fn_name"}</code></td><td>Model must call this specific tool</td></tr>
+</tbody></table>
+
+<div class="callout tip"><span class="callout-icon">&#128161;</span><div class="callout-body"><strong>Write great tool descriptions.</strong> The model uses your description to decide when to call a tool. Be explicit about when it should and should not be used. Include edge cases and examples in the description.</div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('streaming')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Streaming</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('vision')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Vision &amp; Images</div></div>
+</div>
+</div>
+</div>
+<!-- VISION -->
+<div class="doc-section" id="doc-vision">
+<div class="doc-header">
+  <div class="doc-eyebrow">Capabilities</div>
+  <h1 class="doc-title">Vision &amp; Images</h1>
+  <p class="doc-lead">All Area models natively understand images. Send photos, screenshots, diagrams, charts — the model reads them as naturally as text.</p>
+</div>
+<div class="doc-body">
+<h2>Supported Formats</h2>
+<table><thead><tr><th>Format</th><th>MIME Type</th><th>Max Size</th><th>Notes</th></tr></thead>
+<tbody>
+  <tr><td>JPEG</td><td><code>image/jpeg</code></td><td>5 MB</td><td>Recommended for photos</td></tr>
+  <tr><td>PNG</td><td><code>image/png</code></td><td>5 MB</td><td>Best for screenshots, diagrams</td></tr>
+  <tr><td>GIF</td><td><code>image/gif</code></td><td>5 MB</td><td>First frame only</td></tr>
+  <tr><td>WebP</td><td><code>image/webp</code></td><td>5 MB</td><td>Full support</td></tr>
+  <tr><td>PDF</td><td><code>application/pdf</code></td><td>32 MB</td><td>Up to 100 pages, text + visuals</td></tr>
+</tbody></table>
+
+<h2>Sending an Image (Base64)</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">base64</span>, <span class="var">area</span>
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"chart.png"</span>, <span class="str">"rb"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">img</span> = <span class="var">base64</span>.<span class="fn">b64encode</span>(<span class="var">f</span>.<span class="fn">read</span>()).<span class="fn">decode</span>()
+
+<span class="var">client</span> = <span class="cls">area</span>.<span class="fn">Area</span>()
+<span class="var">resp</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+    <span class="prop">messages</span>=[{
+        <span class="str">"role"</span>: <span class="str">"user"</span>,
+        <span class="str">"content"</span>: [
+            {
+                <span class="str">"type"</span>: <span class="str">"image"</span>,
+                <span class="str">"source"</span>: {<span class="str">"type"</span>: <span class="str">"base64"</span>, <span class="str">"media_type"</span>: <span class="str">"image/png"</span>, <span class="str">"data"</span>: <span class="var">img</span>}
+            },
+            {<span class="str">"type"</span>: <span class="str">"text"</span>, <span class="str">"text"</span>: <span class="str">"Analyze this chart and summarize key trends."</span>}
+        ]
+    }]
+)
+<span class="fn">print</span>(<span class="var">resp</span>.<span class="prop">content</span>[<span class="num">0</span>].<span class="prop">text</span>)</pre></div></div>
+
+<h2>Multiple Images</h2>
+<p>Send up to 20 images per message. The model understands their relationships — useful for comparisons, before/after analysis, and multi-page documents.</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">content</span> = []
+<span class="kw">for</span> <span class="var">path</span> <span class="kw">in</span> [<span class="str">"page1.png"</span>, <span class="str">"page2.png"</span>, <span class="str">"page3.png"</span>]:
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="var">path</span>, <span class="str">"rb"</span>) <span class="kw">as</span> <span class="var">f</span>:
+        <span class="var">data</span> = <span class="var">base64</span>.<span class="fn">b64encode</span>(<span class="var">f</span>.<span class="fn">read</span>()).<span class="fn">decode</span>()
+    <span class="var">content</span>.<span class="fn">append</span>({
+        <span class="str">"type"</span>: <span class="str">"image"</span>,
+        <span class="str">"source"</span>: {<span class="str">"type"</span>: <span class="str">"base64"</span>, <span class="str">"media_type"</span>: <span class="str">"image/png"</span>, <span class="str">"data"</span>: <span class="var">data</span>}
+    })
+<span class="var">content</span>.<span class="fn">append</span>({<span class="str">"type"</span>: <span class="str">"text"</span>, <span class="str">"text"</span>: <span class="str">"Summarize all three pages as a report"</span>})</pre></div></div>
+
+<div class="callout warn"><span class="callout-icon">&#9888;&#65039;</span><div class="callout-body"><strong>URL privacy:</strong> For image URLs, Area fetches at request time. Use base64 for sensitive images — they are not stored after the request completes.</div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('tool-use')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Tool Use</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('prompt-caching')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Prompt Caching</div></div>
+</div>
+</div>
+</div>
+
+<!-- PROMPT CACHING -->
+<div class="doc-section" id="doc-prompt-caching">
+<div class="doc-header">
+  <div class="doc-eyebrow">Capabilities</div>
+  <h1 class="doc-title">Prompt Caching</h1>
+  <p class="doc-lead">Cache reused portions of your prompts and save up to 90% on input token costs. Ideal for large system prompts, reference documents, and tool definitions.</p>
+</div>
+<div class="doc-body">
+<h2>How It Works</h2>
+<p>Add <code>"cache_control": {"type": "ephemeral"}</code> to any content block. Area stores that prefix in a cache after first use. Subsequent requests reading from cache cost 90% less.</p>
+<table><thead><tr><th>Metric</th><th>Value</th></tr></thead>
+<tbody>
+  <tr><td>Cache lifetime</td><td>5 minutes (extended on each use)</td></tr>
+  <tr><td>Write cost</td><td>1.25&times; base input price</td></tr>
+  <tr><td>Read cost</td><td>0.10&times; base input price (90% savings)</td></tr>
+  <tr><td>Min cacheable tokens</td><td>1024 (Sonnet/Opus), 2048 (Haiku)</td></tr>
+  <tr><td>Max breakpoints</td><td>4 per request</td></tr>
+</tbody></table>
+
+<h2>Basic Usage</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">BIG_SYSTEM_PROMPT</span> = <span class="str">"[5000+ token knowledge base, guidelines, examples...]"</span>
+
+<span class="var">resp</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+    <span class="prop">system</span>=[{
+        <span class="str">"type"</span>: <span class="str">"text"</span>,
+        <span class="str">"text"</span>: <span class="var">BIG_SYSTEM_PROMPT</span>,
+        <span class="str">"cache_control"</span>: {<span class="str">"type"</span>: <span class="str">"ephemeral"</span>}  <span class="cmt"># cache this!</span>
+    }],
+    <span class="prop">messages</span>=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello"</span>}]
+)
+
+<span class="fn">print</span>(<span class="var">resp</span>.<span class="prop">usage</span>.<span class="prop">cache_creation_input_tokens</span>)  <span class="cmt"># written to cache</span>
+<span class="fn">print</span>(<span class="var">resp</span>.<span class="prop">usage</span>.<span class="prop">cache_read_input_tokens</span>)     <span class="cmt"># read from cache</span></pre></div></div>
+
+<h2>When to Cache</h2>
+<ul>
+  <li><strong>Large system prompts:</strong> Product knowledge bases, style guides over 2K tokens</li>
+  <li><strong>RAG context:</strong> Retrieved document chunks included in every request</li>
+  <li><strong>Few-shot examples:</strong> Long input/output example lists</li>
+  <li><strong>Tool definitions:</strong> When you have many detailed tool descriptions</li>
+  <li><strong>Conversation history:</strong> Cache the growing history in long conversations</li>
+</ul>
+
+<div class="callout tip"><span class="callout-icon">&#128161;</span><div class="callout-body"><strong>Cost math:</strong> A 10K token system prompt used 100&times;/minute costs ~87% less with caching — one write at 1.25&times; plus 99 reads at 0.10&times; vs 100 full reads at 1.0&times;.</div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('vision')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Vision &amp; Images</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('prompt-engineering')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Prompt Engineering</div></div>
+</div>
+</div>
+</div>
+
+<!-- PROMPT ENGINEERING -->
+<div class="doc-section" id="doc-prompt-engineering">
+<div class="doc-header">
+  <div class="doc-eyebrow">Best Practices</div>
+  <h1 class="doc-title">Prompt Engineering</h1>
+  <p class="doc-lead">Effective prompting unlocks the full capability of Area models. These techniques are battle-tested across thousands of production deployments.</p>
+</div>
+<div class="doc-body">
+<h2>Fundamental Principles</h2>
+<h3>Be Specific and Explicit</h3>
+<p>Area models do exactly what you ask. Ambiguous instructions lead to inconsistent output. State your constraints, format requirements, and expectations clearly.</p>
+<div class="callout warn"><span class="callout-icon">&#9888;&#65039;</span><div class="callout-body"><strong>Vague:</strong> "Summarize this."<br/><strong>Specific:</strong> "Summarize this article in 3 bullet points (max 20 words each) for a non-technical audience. Focus on business impact."</div></div>
+
+<h3>Use System Prompts for Persistent Behavior</h3>
+<p>The system prompt defines role, format, tone, and constraints that apply to every turn. Think of it as the model's permanent instructions.</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">text &mdash; example system prompt</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>You are a customer support agent for TechFlow, a SaaS project management tool.
+
+## Your Role
+Help users resolve issues, answer questions, and guide them through the product.
+Be professional, empathetic, and solution-focused.
+
+## Response Format
+- Use short paragraphs (3-4 sentences max)
+- Use numbered steps for multi-step instructions
+- Always end with: "Is there anything else I can help with?"
+
+## Constraints
+- Never promise features that do not exist
+- For billing issues, escalate to: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fd9f94919194939abd89989e959b91928ad39e9290">[email&#160;protected]</a>
+- When unsure, say "Let me check" rather than guessing</pre></div></div>
+
+<h3>Few-Shot Prompting</h3>
+<p>Examples are the most powerful way to shape output format and style. Show the model exactly what good output looks like.</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">prompt</span> = <span class="str">"""Classify support tickets as: BILLING, TECHNICAL, FEATURE_REQUEST, or OTHER.
+
+Ticket: "My payment failed"
+Category: BILLING
+
+Ticket: "App crashes uploading CSV"
+Category: TECHNICAL
+
+Ticket: "Please add dark mode"
+Category: FEATURE_REQUEST
+
+Ticket: "How do I export my data?"
+Category: OTHER
+
+Ticket: "I was charged twice this month"
+Category:"""</span></pre></div></div>
+
+<h2>Advanced Techniques</h2>
+<h3>Chain-of-Thought Reasoning</h3>
+<p>Asking the model to reason step-by-step before answering significantly improves accuracy on math, logic, and analysis tasks.</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">text</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre>Think through each step carefully before giving your final answer.
+Show your reasoning explicitly.
+
+Problem: A company has 240 employees. 35% work in engineering.
+Of those, 40% are senior engineers. How many senior engineers?</pre></div></div>
+
+<h3>XML Tags for Structure</h3>
+<p>Use XML tags to clearly separate different parts of a prompt. Especially important when inserting user-provided content — prevents injection and ensures the model treats sections correctly.</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">prompt</span> = <span class="var">f</span><span class="str">"""Review this code for bugs, security issues, and improvements.
+
+&lt;code language="{language}"&gt;
+{user_code}
+&lt;/code&gt;
+
+Respond with:
+&lt;bugs&gt;...&lt;/bugs&gt;
+&lt;security&gt;...&lt;/security&gt;
+&lt;improvements&gt;...&lt;/improvements&gt;"""</span></pre></div></div>
+
+<h3>Prefilling Responses</h3>
+<p>Prefill the assistant's response to enforce specific output formats — great for JSON, code, or structured data.</p>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="var">resp</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">1024</span>,
+    <span class="prop">messages</span>=[
+        {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Extract name and email. Respond only with JSON."</span>},
+        {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"{"</span>}  <span class="cmt"># forces JSON output</span>
+    ]
+)</pre></div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('prompt-caching')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Prompt Caching</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('errors')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Errors &amp; Rate Limits</div></div>
+</div>
+</div>
+</div>
+
+<!-- ERRORS -->
+<div class="doc-section" id="doc-errors">
+<div class="doc-header">
+  <div class="doc-eyebrow">Best Practices</div>
+  <h1 class="doc-title">Errors &amp; Rate Limits</h1>
+  <p class="doc-lead">Understanding error types, implementing retry logic, and managing rate limits is essential for production applications.</p>
+</div>
+<div class="doc-body">
+<h2>HTTP Status Codes</h2>
+<div class="err-grid">
+  <div class="err-row head"><div class="err-c">HTTP</div><div class="err-c">Error Type</div><div class="err-c">Description &amp; Resolution</div></div>
+  <div class="err-row"><div class="err-c code s4">400</div><div class="err-c s4">invalid_request_error</div><div class="err-c">Malformed request — missing required fields, invalid parameter values, or bad message array structure. Check your request body.</div></div>
+  <div class="err-row"><div class="err-c code s4">401</div><div class="err-c s4">authentication_error</div><div class="err-c">Invalid or missing API key. Ensure the <code>x-api-key</code> header is set and the key is active in your Console.</div></div>
+  <div class="err-row"><div class="err-c code s4">403</div><div class="err-c s4">permission_error</div><div class="err-c">Your API key lacks permission for this operation. Check your account tier and key permissions.</div></div>
+  <div class="err-row"><div class="err-c code s4">404</div><div class="err-c s4">not_found_error</div><div class="err-c">Requested resource (model ID, batch ID) not found. Check for typos in model identifiers.</div></div>
+  <div class="err-row"><div class="err-c code s4">429</div><div class="err-c s4">rate_limit_error</div><div class="err-c">Too many requests. Use the <code>retry-after</code> header and implement exponential backoff.</div></div>
+  <div class="err-row"><div class="err-c code s5">500</div><div class="err-c s5">api_error</div><div class="err-c">Internal server error. Retry with backoff. Check status.area.ai if it persists.</div></div>
+  <div class="err-row"><div class="err-c code s5">529</div><div class="err-c s5">overloaded_error</div><div class="err-c">Area is temporarily overloaded. Back off and retry. Consider queuing requests during peak load.</div></div>
+</div>
+
+<h2>Retry Logic</h2>
+<div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div>
+<div class="cb-body"><pre><span class="kw">import</span> <span class="var">time</span>, <span class="var">random</span>, <span class="var">area</span>
+
+<span class="kw">def</span> <span class="fn">create_with_retry</span>(<span class="var">client</span>, <span class="var">max_retries</span>=<span class="num">3</span>, **<span class="var">kwargs</span>):
+    <span class="kw">for</span> <span class="var">attempt</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">max_retries</span>):
+        <span class="kw">try</span>:
+            <span class="kw">return</span> <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(**<span class="var">kwargs</span>)
+        <span class="kw">except</span> <span class="cls">area</span>.<span class="cls">RateLimitError</span>:
+            <span class="kw">if</span> <span class="var">attempt</span> == <span class="var">max_retries</span> - <span class="num">1</span>: <span class="kw">raise</span>
+            <span class="var">wait</span> = (<span class="num">2</span> ** <span class="var">attempt</span>) + <span class="var">random</span>.<span class="fn">uniform</span>(<span class="num">0</span>, <span class="num">1</span>)
+            <span class="fn">print</span>(<span class="str">f"Rate limited. Retrying in {wait:.1f}s..."</span>)
+            <span class="var">time</span>.<span class="fn">sleep</span>(<span class="var">wait</span>)
+        <span class="kw">except</span> (<span class="cls">area</span>.<span class="cls">APIConnectionError</span>, <span class="cls">area</span>.<span class="cls">InternalServerError</span>):
+            <span class="kw">if</span> <span class="var">attempt</span> == <span class="var">max_retries</span> - <span class="num">1</span>: <span class="kw">raise</span>
+            <span class="var">time</span>.<span class="fn">sleep</span>(<span class="num">2</span> ** <span class="var">attempt</span>)
+        <span class="kw">except</span> <span class="cls">area</span>.<span class="cls">BadRequestError</span>:
+            <span class="kw">raise</span>  <span class="cmt"># Don't retry client errors</span></pre></div></div>
+
+<h2>Rate Limits by Tier</h2>
+<table><thead><tr><th>Tier</th><th>Req/min</th><th>Input tok/min</th><th>Output tok/min</th></tr></thead>
+<tbody>
+  <tr><td>Free</td><td>5</td><td>25,000</td><td>8,000</td></tr>
+  <tr><td>Tier 1 ($5+)</td><td>50</td><td>50,000</td><td>10,000</td></tr>
+  <tr><td>Tier 2 ($40+)</td><td>1,000</td><td>160,000</td><td>32,000</td></tr>
+  <tr><td>Tier 3 ($200+)</td><td>2,000</td><td>320,000</td><td>64,000</td></tr>
+  <tr><td>Tier 4 ($400+)</td><td>4,000</td><td>400,000</td><td>80,000</td></tr>
+  <tr><td>Enterprise</td><td>Custom</td><td>Custom</td><td>Custom</td></tr>
+</tbody></table>
+
+<div class="callout tip"><span class="callout-icon">&#128161;</span><div class="callout-body"><strong>Rate limit headers:</strong> Every response includes <code>ratelimit-limit-requests</code>, <code>ratelimit-remaining-requests</code>, and <code>ratelimit-reset-requests</code> headers. Monitor these proactively in production.</div></div>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('prompt-engineering')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Prompt Engineering</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('safety')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Safety Guidelines</div></div>
+</div>
+</div>
+</div>
+
+<!-- SAFETY -->
+<div class="doc-section" id="doc-safety">
+<div class="doc-header">
+  <div class="doc-eyebrow">Best Practices</div>
+  <h1 class="doc-title">Safety Guidelines</h1>
+  <p class="doc-lead">Area models are trained to be helpful, harmless, and honest. Understanding their safety properties helps you build applications that are powerful and responsible.</p>
+</div>
+<div class="doc-body">
+<h2>Model Behavior</h2>
+<p>Area models are trained with Constitutional AI (CAI) and RLHF, instilling core values around safety, accuracy, and honesty that persist even under adversarial prompting. The models will decline requests that could cause significant harm, acknowledge uncertainty rather than fabricating facts, and maintain these behaviors regardless of instructions.</p>
+
+<h2>Usage Policy</h2>
+<p>The Area API may not be used to generate:</p>
+<ul>
+  <li>Content that sexually exploits minors</li>
+  <li>Detailed instructions for biological, chemical, nuclear, or radiological weapons</li>
+  <li>Content designed to facilitate real-world violence against specific people</li>
+  <li>Malware or cyberweapons intended to cause widespread damage</li>
+</ul>
+<p>Full policy at <code>area.ai/legal/usage-policy</code>.</p>
+
+<h2>Sensitive Domains</h2>
+<p>For healthcare, legal, mental health, or financial advice applications:</p>
+<ul>
+  <li>Add explicit disclaimers in your system prompt: "You are not a licensed doctor. Always recommend consulting a professional."</li>
+  <li>Display appropriate disclaimers in your UI</li>
+  <li>Review model outputs before surfacing them in high-stakes contexts</li>
+  <li>Use <code>metadata.user_id</code> for abuse monitoring</li>
+</ul>
+
+<h2>Prompt Injection Defense</h2>
+<p>When passing user content to the model, protect against prompt injection attacks where users try to override your system instructions.</p>
+<ul>
+  <li>Wrap user content in XML tags: <code>&lt;user_input&gt;...&lt;/user_input&gt;</code></li>
+  <li>Reinforce constraints in the message: "Remember: only answer questions about our product."</li>
+  <li>Validate and sanitize user inputs before including in prompts</li>
+  <li>Log and monitor unusual outputs for human review</li>
+</ul>
+
+<div class="doc-nav-footer">
+  <div class="doc-nav-btn" onclick="showDoc('errors')"><div class="doc-nav-dir">&larr; Previous</div><div class="doc-nav-title">Errors &amp; Rate Limits</div></div>
+  <div class="doc-nav-btn next" onclick="showDoc('batch-api')"><div class="doc-nav-dir">Next &rarr;</div><div class="doc-nav-title">Batch API</div></div>
+</div>
+</div>
+</div>
+
+<!-- STUB SECTIONS -->
+<div class="doc-section" id="doc-authentication"><div class="doc-header"><div class="doc-eyebrow">Get Started</div><h1 class="doc-title">Authentication</h1><p class="doc-lead">Manage API keys, service accounts, and secure your integration.</p></div><div class="doc-body"><h2>API Keys</h2><p>Pass your API key via the <code>x-api-key</code> header on every request. Keys are managed in <strong>Console &rarr; API Keys</strong>. You can create multiple keys for different environments (dev, staging, prod), set spending limits per key, and revoke individual keys without affecting others.</p><h3>Key Security</h3><ul><li>Never commit keys to version control — use environment variables</li><li>Rotate keys every 90 days as a best practice</li><li>Use separate keys per application and per environment</li><li>Monitor key usage in the Console for unexpected spikes</li></ul></div></div>
+
+<div class="doc-section" id="doc-system-prompts"><div class="doc-header"><div class="doc-eyebrow">Core Concepts</div><h1 class="doc-title">System Prompts</h1><p class="doc-lead">Define persistent context, persona, and behavioral guidelines for the assistant.</p></div><div class="doc-body"><h2>Overview</h2><p>The <code>system</code> parameter sets instructions that apply to every turn of the conversation. Unlike user messages, the system prompt is not shown to the model as coming from a person — it sets the foundational context from which the model operates.</p><h3>Best Practices</h3><ul><li>Keep system prompts focused — one clear role and set of instructions</li><li>Use headings (##) to organize long system prompts</li><li>Be explicit about format, tone, and constraints</li><li>Include examples of good responses when output format matters</li><li>Cache long system prompts with Prompt Caching to reduce costs</li></ul></div></div>
+
+<div class="doc-section" id="doc-context-windows"><div class="doc-header"><div class="doc-eyebrow">Core Concepts</div><h1 class="doc-title">Context Windows</h1><p class="doc-lead">Understand token limits, how to count tokens, and strategies for managing long contexts.</p></div><div class="doc-body"><h2>200K Token Context</h2><p>All Area models support a 200,000 token context window — roughly 150,000 words or 500+ pages of text. This allows you to process entire books, large codebases, or lengthy document collections in a single request.</p><h3>Token Counting</h3><p>Use the token counting endpoint before sending large requests to estimate cost and verify you are within limits.</p><div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div><div class="cb-body"><pre><span class="var">count</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">count_tokens</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">messages</span>=<span class="var">your_messages</span>
+)
+<span class="fn">print</span>(<span class="var">count</span>.<span class="prop">input_tokens</span>)</pre></div></div></div></div>
+
+<div class="doc-section" id="doc-extended-thinking"><div class="doc-header"><div class="doc-eyebrow">Capabilities</div><h1 class="doc-title">Extended Thinking</h1><p class="doc-lead">Enable deep, step-by-step reasoning before the model gives its final answer. Available on Opus 3 and Sonnet 3.7.</p></div><div class="doc-body"><h2>Overview</h2><p>Extended thinking gives the model a private scratchpad to reason through problems before responding. The thinking content appears as a separate block in the response, letting you see the model's reasoning process.</p><div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div><div class="cb-body"><pre><span class="var">resp</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-7-20250219"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">16000</span>,
+    <span class="prop">thinking</span>={<span class="str">"type"</span>: <span class="str">"enabled"</span>, <span class="str">"budget_tokens"</span>: <span class="num">10000</span>},
+    <span class="prop">messages</span>=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Solve this complex math problem..."</span>}]
+)
+<span class="kw">for</span> <span class="var">block</span> <span class="kw">in</span> <span class="var">resp</span>.<span class="prop">content</span>:
+    <span class="kw">if</span> <span class="var">block</span>.<span class="prop">type</span> == <span class="str">"thinking"</span>:
+        <span class="fn">print</span>(<span class="str">"Thinking:"</span>, <span class="var">block</span>.<span class="prop">thinking</span>)
+    <span class="kw">elif</span> <span class="var">block</span>.<span class="prop">type</span> == <span class="str">"text"</span>:
+        <span class="fn">print</span>(<span class="str">"Answer:"</span>, <span class="var">block</span>.<span class="prop">text</span>)</pre></div></div></div></div>
+
+<div class="doc-section" id="doc-batch-api"><div class="doc-header"><div class="doc-eyebrow">Capabilities</div><h1 class="doc-title">Batch API</h1><p class="doc-lead">Process large volumes of requests asynchronously at 50% lower cost. No rate limits, results within 24 hours.</p></div><div class="doc-body"><h2>Overview</h2><p>Submit up to 10,000 requests per batch. Ideal for data processing pipelines, offline evaluations, generating embeddings at scale, and any workload that doesn't need real-time responses. Pricing is 50% of standard rates.</p><div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div><div class="cb-body"><pre><span class="cmt"># Create a batch</span>
+<span class="var">batch</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">batches</span>.<span class="fn">create</span>(
+    <span class="prop">requests</span>=[
+        {
+            <span class="str">"custom_id"</span>: <span class="str">f"req-{i}"</span>,
+            <span class="str">"params"</span>: {
+                <span class="str">"model"</span>: <span class="str">"area-sonnet-3-5-20241022"</span>,
+                <span class="str">"max_tokens"</span>: <span class="num">1024</span>,
+                <span class="str">"messages"</span>: [{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="var">text</span>}]
+            }
+        }
+        <span class="kw">for</span> <span class="var">i</span>, <span class="var">text</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="var">your_texts</span>)
+    ]
+)
+<span class="fn">print</span>(<span class="var">batch</span>.<span class="prop">id</span>)  <span class="cmt"># save this to poll for results</span></pre></div></div></div></div>
+
+<div class="doc-section" id="doc-embeddings"><div class="doc-header"><div class="doc-eyebrow">Capabilities</div><h1 class="doc-title">Embeddings</h1><p class="doc-lead">Convert text into dense vector representations for semantic search, clustering, and similarity.</p></div><div class="doc-body"><h2>Overview</h2><p>Area's embedding models produce 1536-dimension vectors optimized for semantic similarity. Use them to build search indexes, recommendation systems, classification models, and clustering pipelines.</p><div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div><div class="cb-body"><pre><span class="var">resp</span> = <span class="var">client</span>.<span class="fn">embeddings</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-embed-v1"</span>,
+    <span class="prop">input</span>=[<span class="str">"First document to embed"</span>, <span class="str">"Second document"</span>]
+)
+<span class="var">vectors</span> = [d.<span class="prop">embedding</span> <span class="kw">for</span> <span class="var">d</span> <span class="kw">in</span> <span class="var">resp</span>.<span class="prop">data</span>]
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="var">vectors</span>[<span class="num">0</span>]))  <span class="cmt"># 1536</span></pre></div></div></div></div>
+
+<div class="doc-section" id="doc-documents"><div class="doc-header"><div class="doc-eyebrow">Capabilities</div><h1 class="doc-title">Document Processing</h1><p class="doc-lead">Send PDFs and documents as structured inputs — the model reads both text and visual content natively.</p></div><div class="doc-body"><h2>PDF Support</h2><p>Send PDF documents up to 32 MB and 100 pages. The model reads text, tables, diagrams, and charts natively. No preprocessing needed.</p><div class="code-block"><div class="cb-head"><div class="cb-lang">python</div><button class="cb-copy">Copy</button></div><div class="cb-body"><pre><span class="kw">import</span> <span class="var">base64</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"report.pdf"</span>, <span class="str">"rb"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">pdf_data</span> = <span class="var">base64</span>.<span class="fn">b64encode</span>(<span class="var">f</span>.<span class="fn">read</span>()).<span class="fn">decode</span>()
+
+<span class="var">resp</span> = <span class="var">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+    <span class="prop">model</span>=<span class="str">"area-sonnet-3-5-20241022"</span>,
+    <span class="prop">max_tokens</span>=<span class="num">4096</span>,
+    <span class="prop">messages</span>=[{
+        <span class="str">"role"</span>: <span class="str">"user"</span>,
+        <span class="str">"content"</span>: [
+            {<span class="str">"type"</span>: <span class="str">"document"</span>, <span class="str">"source"</span>: {<span class="str">"type"</span>: <span class="str">"base64"</span>, <span class="str">"media_type"</span>: <span class="str">"application/pdf"</span>, <span class="str">"data"</span>: <span class="var">pdf_data</span>}},
+            {<span class="str">"type"</span>: <span class="str">"text"</span>, <span class="str">"text"</span>: <span class="str">"Summarize the key findings from this report."</span>}
+        ]
+    }]
+)</pre></div></div></div></div>
+
+<div class="doc-section" id="doc-testing"><div class="doc-header"><div class="doc-eyebrow">Best Practices</div><h1 class="doc-title">Testing &amp; Evals</h1><p class="doc-lead">Build confidence in your AI integration through systematic evaluation before shipping to production.</p></div><div class="doc-body"><h2>Why Evals Matter</h2><p>Unlike traditional software where unit tests give exact pass/fail results, AI outputs are probabilistic. Evals give you a statistical measure of quality — and help you catch regressions when you change models or prompts.</p><h3>Eval Workflow</h3><div class="step-guide"><div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Build a golden dataset</div><div class="step-desc">Collect 50-200 representative inputs with expected outputs or quality criteria. Include edge cases and examples from production.</div></div></div><div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Define scoring criteria</div><div class="step-desc">Exact match for classification tasks. LLM-as-judge for open-ended quality. Human review for high-stakes domains.</div></div></div><div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Run via Batch API</div><div class="step-desc">Submit your dataset using the Batch API for cost-efficient evaluation. 50% off standard pricing.</div></div></div><div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Analyze and iterate</div><div class="step-desc">Review failures, update your prompt, and re-run. Track scores over time as you make changes.</div></div></div></div></div></div>
+
+<div class="doc-section" id="doc-migration"><div class="doc-header"><div class="doc-eyebrow">Resources</div><h1 class="doc-title">Migration Guide</h1><p class="doc-lead">Moving from OpenAI, Cohere, or another provider? Here is what you need to know.</p></div><div class="doc-body"><h2>From OpenAI Chat Completions</h2><p>The Area Messages API is intentionally similar to OpenAI's Chat Completions API, but with a few key differences:</p><table><thead><tr><th>Feature</th><th>OpenAI</th><th>Area</th></tr></thead><tbody><tr><td>System prompt</td><td>Message with role <code>system</code></td><td>Top-level <code>system</code> parameter</td></tr><tr><td>Content</td><td>String or array</td><td>Always an array of content blocks</td></tr><tr><td>Tool schemas</td><td><code>parameters</code></td><td><code>input_schema</code></td></tr><tr><td>Streaming</td><td>SSE, <code>choices[0].delta</code></td><td>SSE, <code>content_block_delta</code></td></tr><tr><td>Auth header</td><td><code>Authorization: Bearer</code></td><td><code>x-api-key</code></td></tr></tbody></table></div></div>
+
+<div class="doc-section" id="doc-changelog-doc"><div class="doc-header"><div class="doc-eyebrow">Resources</div><h1 class="doc-title">Changelog</h1><p class="doc-lead">New features, model updates, and API changes.</p></div><div class="doc-body"><h2>April 2025</h2><p><strong>Area Haiku 3.5</strong> — Now supports vision and extended context. 2&times; faster than Haiku 3 with improved instruction following.</p><p><strong>Prompt Caching GA</strong> — Generally available for all tiers. Cache lifetime extended to 5 minutes with auto-refresh.</p><h2>March 2025</h2><p><strong>Area Sonnet 3.7</strong> — New flagship model with improved coding, reasoning, and instruction following. Supports extended thinking.</p><p><strong>Batch API</strong> — Process up to 10,000 requests asynchronously at 50% reduced cost. Results within 24 hours.</p><h2>February 2025</h2><p><strong>Extended Thinking Beta</strong> — Available on Sonnet 3.7 and Opus 3. Set token budget and let the model reason before responding.</p><h2>January 2025</h2><p><strong>200K context for all models</strong> — Haiku 3 now supports 200K token context windows, matching Sonnet and Opus.</p></div></div>
+
+<div class="doc-section" id="doc-support"><div class="doc-header"><div class="doc-eyebrow">Resources</div><h1 class="doc-title">Support</h1><p class="doc-lead">Get help from the Area team and developer community.</p></div><div class="doc-body"><h2>Contact Options</h2><ul><li><strong>API issues:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7c0f090c0c130e083c1d0e191d521d15">[email&#160;protected]</a> — include your request ID from the <code>request-id</code> response header</li><li><strong>Console feedback:</strong> Use the feedback button in the Console for product suggestions</li><li><strong>Discord community:</strong> discord.gg/area-ai — 10,000+ developers, ask questions and share projects</li><li><strong>Status page:</strong> status.area.ai — real-time status and incident history</li><li><strong>Enterprise support:</strong> Dedicated Slack channel, SLA guarantees — <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3f5a514b5a4d4f4d564c5a7f5e4d5a5e115e56">[email&#160;protected]</a></li></ul><h2>When Filing a Bug</h2><p>Include: your <code>request-id</code> header value, the model name and version, a minimal reproducible example, and what you expected vs. what happened.</p></div></div>
+
+</main>
+
+<!-- TOC -->
+<aside class="docs-toc" id="docs-toc">
+  <div class="toc-label">On this page</div>
+  <div id="toc-links">
+    <span class="toc-item active">What is Area?</span>
+    <span class="toc-item">The model family</span>
+    <span class="toc-item h3">Area Opus</span>
+    <span class="toc-item h3">Area Sonnet</span>
+    <span class="toc-item h3">Area Haiku</span>
+    <span class="toc-item">Core Capabilities</span>
+    <span class="toc-item h3">Text Generation</span>
+    <span class="toc-item h3">Vision</span>
+    <span class="toc-item h3">Tool Use</span>
+    <span class="toc-item h3">Streaming</span>
+    <span class="toc-item">API Design</span>
+    <span class="toc-item">Getting an API Key</span>
+    <div class="toc-divider"></div>
+    <div class="toc-actions">
+      <span class="toc-action">&#9998; Edit this page</span>
+      <span class="toc-action">&#128027; Report an issue</span>
+      <span class="toc-action">&#128172; Ask in Discord</span>
+    </div>
+  </div>
+</aside>
+
+</div>
+
+<footer>
+  <div class="foot-left">
+    <svg width="20" height="20" viewBox="0 0 100 100"><path d="M50 45C43 25,17 16,10 30C4 43,18 62,50 49Z" fill="#9ab4ec"/><path d="M50 45C57 25,83 16,90 30C96 43,82 62,50 49Z" fill="#9ab4ec"/><path d="M50 54C38 58,16 71,21 82C27 91,44 86,50 60Z" fill="#7ba4e8"/><path d="M50 54C62 58,84 71,79 82C73 91,56 86,50 60Z" fill="#7ba4e8"/></svg>
+    <span class="foot-brand">Area</span>
+    <span class="foot-copy">&copy; 2025 Area AI, Inc.</span>
+  </div>
+  <div class="foot-links">
+    <a>Privacy</a><a>Terms</a><a>Security</a><a>Status</a><a>API Reference</a><a>GitHub</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function showDoc(id) {
+  document.querySelectorAll('.doc-section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.sb-item').forEach(function(s){ s.classList.remove('active'); });
+  var target = document.getElementById('doc-' + id);
+  if (target) { target.classList.add('active'); window.scrollTo(0,0); }
+  document.querySelectorAll('.sb-item').forEach(function(item) {
+    var oc = item.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1) item.classList.add('active');
+  });
+}
+function showDocM(id) { showDoc(id); closeDrawer(); }
+function openDrawer() {
+  document.getElementById('mob-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('cb-copy')) {
+    var pre = e.target.closest('.code-block').querySelector('pre');
+    var text = pre ? pre.textContent : '';
+    navigator.clipboard.writeText(t

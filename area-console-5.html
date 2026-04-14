@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Area Console — Developer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#faf9f6;--bg2:#f3f1eb;--bg3:#eceae2;
+  --white:#fff;--border:#dedad0;--border2:#ccc8bc;--border3:#b8b4a4;
+  --text:#19190f;--text2:#48483a;--text3:#78786a;--text4:#a8a89a;
+  --accent:#c8773a;--blue:#3b6fe8;--green:#2e7d52;--red:#c0392b;
+  --font:"DM Sans","Helvetica Neue",sans-serif;
+  --serif:"DM Serif Display",Georgia,serif;
+  --mono:"JetBrains Mono",monospace;
+  --topbar:56px;--sidebar:220px;
+}
+html,body{height:100%;background:var(--bg2)}
+body{color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font)}
+input,textarea,select{font-family:var(--font)}
+
+/* TOP BAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--topbar);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:0}
+.tb-brand{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.03em;color:var(--text);flex-shrink:0;margin-right:20px;cursor:pointer}
+.tb-divider{width:1px;height:18px;background:var(--border);margin:0 12px}
+.tb-org{font-size:13.5px;font-weight:500;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer}
+.tb-org:hover{color:var(--text)}
+.tb-org .ch{opacity:.4;font-size:10px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:pointer;transition:all .12s}
+.tb-icon-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--border2)}
+.tb-avatar{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#9ab4ec,#7b8cde);font-size:12px;font-weight:600;color:#fff;cursor:pointer;flex-shrink:0}
+.tb-new-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--text);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .13s}
+.tb-new-btn:hover{background:#2c2c20}
+
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:var(--topbar);bottom:0;width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);padding:16px 0 24px;overflow-y:auto;z-index:100}
+.sb-section{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text4);padding:14px 20px 6px;margin-top:4px}
+.sb-section:first-child{margin-top:0}
+.sb-link{display:flex;align-items:center;gap:9px;padding:7px 20px;font-size:13.5px;color:var(--text2);cursor:pointer;transition:all .1s;border-left:2.5px solid transparent;position:relative}
+.sb-link:hover{background:var(--bg2);color:var(--text)}
+.sb-link.active{background:var(--bg2);color:var(--text);font-weight:500;border-left-color:var(--text)}
+.sb-link-icon{width:16px;height:16px;flex-shrink:0;opacity:.6}
+.sb-link.active .sb-link-icon{opacity:1}
+.sb-badge{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;margin-left:auto;background:var(--bg3);color:var(--text3)}
+.sb-badge.green{background:#dcfce7;color:#166534}
+.sb-badge.blue{background:#dbeafe;color:#1d4ed8}
+.sb-divider{height:1px;background:var(--border);margin:10px 20px}
+.sb-workspace{margin:12px 14px 0;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:7px}
+.sb-ws-label{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text4)}
+.sb-ws-name{font-size:13px;font-weight:500;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.sb-ws-plan{font-size:11px;color:var(--text4);display:flex;align-items:center;gap:5px}
+.sb-ws-dot{width:6px;height:6px;border-radius:50%;background:#22c55e}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);padding-top:var(--topbar)}
+.page-content{display:none;padding:28px 32px;max-width:1160px}
+.page-content.active{display:block}
+
+/* PAGE HEADER */
+.page-hdr{margin-bottom:24px}
+.page-hdr h1{font-size:22px;font-weight:600;letter-spacing:-.02em;color:var(--text);margin-bottom:5px}
+.page-hdr p{font-size:14px;color:var(--text3);font-weight:300}
+.page-hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+
+/* STAT CARDS */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:20px 22px;display:flex;flex-direction:column;gap:8px;transition:all .14s}
+.stat-card:hover{border-color:var(--border2);box-shadow:0 3px 14px rgba(0,0,0,.06)}
+.sc-label{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text4)}
+.sc-value{font-size:28px;font-weight:600;letter-spacing:-.03em;color:var(--text);line-height:1}
+.sc-sub{font-size:12.5px;color:var(--text3);font-weight:300}
+.sc-trend{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500}
+.sc-trend.up{color:var(--green)}.sc-trend.down{color:var(--red)}
+
+/* CHARTS */
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:24px}
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:22px}
+.chart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.chart-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.chart-period{display:flex;gap:2px}
+.chart-period button{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;border:none;background:transparent;color:var(--text3);cursor:pointer;transition:all .11s}
+.chart-period button.on{background:var(--bg2);color:var(--text)}
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:100px}
+.bar{flex:1;border-radius:4px 4px 0 0;background:var(--bg3);transition:height .3s ease,background .15s;cursor:pointer;position:relative}
+.bar:hover{background:var(--text3)}
+.bar.hi{background:var(--text2)}
+.bar-label{font-size:10px;color:var(--text4);text-align:center;margin-top:6px}
+.bar-labels{display:flex;gap:4px}
+.bar-labels span{flex:1;font-size:9.5px;color:var(--text4);text-align:center}
+.donut-wrap{display:flex;flex-direction:column;gap:14px;height:100%}
+.donut-svg{display:block;margin:0 auto}
+.donut-legend{display:flex;flex-direction:column;gap:9px}
+.dl-item{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text2)}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dl-val{margin-left:auto;font-weight:500;font-family:var(--mono);font-size:12.5px;color:var(--text)}
+
+/* TABLES */
+.table-card{background:var(--white);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:22px}
+.tc-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.tc-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.tc-actions{display:flex;gap:8px}
+.tc-table{width:100%;border-collapse:collapse}
+.tc-table th{padding:10px 20px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text4);text-align:left;background:var(--bg2);border-bottom:1px solid var(--border)}
+.tc-table td{padding:13px 20px;font-size:13.5px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:middle}
+.tc-table tr:last-child td{border-bottom:none}
+.tc-table tr:hover td{background:var(--bg)}
+.mono{font-family:var(--mono);font-size:12.5px}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:5px;letter-spacing:.03em}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-yellow{background:#fef9c3;color:#854d0e}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+.badge-gray{background:var(--bg3);color:var(--text3)}
+.tc-action{display:flex;align-items:center;gap:8px}
+.icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text3);cursor:pointer;transition:all .11s}
+.icon-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--border2)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13.5px;font-weight:500;border:none;transition:all .13s;cursor:pointer;letter-spacing:-.01em}
+.btn-dark{background:var(--text);color:#fff}.btn-dark:hover{background:#2c2c20}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}.btn-outline:hover{background:var(--bg2)}
+.btn-danger{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}.btn-danger:hover{background:#fecaca}
+.btn-green{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}.btn-green:hover{background:#bbf7d0}
+.btn-sm{padding:6px 12px;font-size:12.5px}
+.btn-xs{padding:4px 9px;font-size:12px}
+
+/* FORM ELEMENTS */
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.form-label{font-size:13px;font-weight:500;color:var(--text2)}
+.form-hint{font-size:12px;color:var(--text4);font-weight:300}
+.form-input{padding:9px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;color:var(--text);background:var(--white);outline:none;transition:border-color .13s}
+.form-input:focus{border-color:var(--border3)}
+.form-select{padding:9px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;color:var(--text);background:var(--white);outline:none;appearance:none;cursor:pointer}
+.form-toggle{position:relative;width:42px;height:24px;cursor:pointer}
+.form-toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:var(--bg3);border-radius:12px;transition:.25s;border:1.5px solid var(--border2)}
+.toggle-slider::before{content:"";position:absolute;width:16px;height:16px;left:3px;bottom:2px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.form-toggle input:checked + .toggle-slider{background:var(--text);border-color:var(--text)}
+.form-toggle input:checked + .toggle-slider::before{transform:translateX(18px)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-info{display:flex;flex-direction:column;gap:4px}
+.setting-title{font-size:14px;font-weight:500;color:var(--text)}
+.setting-desc{font-size:13px;color:var(--text3);font-weight:300}
+
+/* API KEY CARD */
+.key-card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:0;overflow:hidden;margin-bottom:14px}
+.key-row{display:flex;align-items:center;padding:16px 20px;gap:14px;border-bottom:1px solid var(--border)}
+.key-row:last-child{border-bottom:none}
+.key-row:hover{background:var(--bg)}
+.key-icon{width:34px;height:34px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.key-info{flex:1;min-width:0}
+.key-name{font-size:14px;font-weight:500;color:var(--text);letter-spacing:-.01em}
+.key-val{font-family:var(--mono);font-size:12px;color:var(--text3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.key-meta{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--text4);flex-shrink:0}
+
+/* MODEL CARDS */
+.model-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mc{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px;transition:all .14s;cursor:default}
+.mc:hover{border-color:var(--border2);box-shadow:0 4px 18px rgba(0,0,0,.07)}
+.mc.flagship{border-color:var(--text);background:var(--text)}
+.mc-top{display:flex;align-items:flex-start;justify-content:space-between}
+.mc-badge{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text4);padding:3px 8px;border-radius:4px;background:var(--bg2);border:1px solid var(--border)}
+.mc.flagship .mc-badge{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.5)}
+.mc-name{font-family:var(--serif);font-size:22px;font-weight:400;letter-spacing:-.03em;color:var(--text);margin-top:6px;line-height:1.2}
+.mc.flagship .mc-name{color:#fff}
+.mc-id{font-family:var(--mono);font-size:11px;color:var(--text3);background:var(--bg2);padding:3px 8px;border-radius:5px;border:1px solid var(--border);display:inline-block;margin-top:2px}
+.mc.flagship .mc-id{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+.mc-desc{font-size:13px;color:var(--text2);line-height:1.6;font-weight:300}
+.mc.flagship .mc-desc{color:rgba(255,255,255,.65)}
+.mc-specs{display:flex;flex-direction:column;gap:7px;padding-top:10px;border-top:1px solid var(--border)}
+.mc.flagship .mc-specs{border-color:rgba(255,255,255,.15)}
+.mc-spec{display:flex;justify-content:space-between;font-size:12.5px}
+.mc-sk{color:var(--text3);font-weight:300}
+.mc-sv{color:var(--text);font-weight:500;font-family:var(--mono);font-size:12px}
+.mc.flagship .mc-sk{color:rgba(255,255,255,.5)}
+.mc.flagship .mc-sv{color:#fff}
+.mc-use-btn{margin-top:auto;padding:8px;border-radius:8px;font-size:13px;font-weight:500;border:1.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;transition:all .13s;width:100%;text-align:center}
+.mc-use-btn:hover{background:var(--bg2)}
+.mc.flagship .mc-use-btn{background:var(--white);color:var(--text);border-color:transparent}
+
+/* USAGE CHART */
+.usage-bar-wrap{display:flex;flex-direction:column;gap:12px}
+.usage-bar-item{display:flex;flex-direction:column;gap:5px}
+.ub-header{display:flex;justify-content:space-between;font-size:13px}
+.ub-label{font-weight:500;color:var(--text)}
+.ub-val{color:var(--text3);font-family:var(--mono);font-size:12.5px}
+.ub-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.ub-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* ACTIVITY LOG */
+.activity-list{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.activity-item{display:flex;align-items:center;gap:14px;padding:13px 20px;background:var(--white);transition:background .1s}
+.activity-item:hover{background:var(--bg)}
+.act-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.act-body{flex:1;min-width:0}
+.act-title{font-size:13.5px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.act-sub{font-size:12px;color:var(--text3);margin-top:2px;font-weight:300}
+.act-time{font-size:12px;color:var(--text4);flex-shrink:0;font-family:var(--mono)}
+.act-status{flex-shrink:0}
+
+/* WORKBENCH */
+.wb-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;height:calc(100vh - var(--topbar) - 120px)}
+.wb-panel{background:var(--white);border:1px solid var(--border);border-radius:13px;display:flex;flex-direction:column;overflow:hidden}
+.wb-panel-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg2);flex-shrink:0}
+.wb-panel-title{font-size:13.5px;font-weight:600;color:var(--text)}
+.wb-textarea{flex:1;resize:none;border:none;padding:16px 18px;font-family:var(--mono);font-size:13px;line-height:1.65;color:var(--text2);background:transparent;outline:none}
+.wb-output{flex:1;overflow-y:auto;padding:16px 18px;font-size:13.5px;color:var(--text2);line-height:1.7;font-weight:300}
+.wb-bottom{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg2);flex-shrink:0}
+.wb-model-select{padding:6px 11px;border:1px solid var(--border);border-radius:7px;font-size:13px;color:var(--text2);background:var(--white);outline:none;appearance:none;cursor:pointer;font-family:var(--font)}
+.wb-token-count{font-size:12px;color:var(--text4);margin-left:auto;font-family:var(--mono)}
+.wb-run-btn{padding:7px 18px;background:var(--text);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .13s}
+.wb-run-btn:hover{background:#2c2c20}
+.wb-run-btn:disabled{opacity:.5;cursor:default}
+.wb-spin{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .55s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SETTINGS */
+.settings-grid{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-top:4px}
+.settings-nav{display:flex;flex-direction:column;gap:2px}
+.settings-nav-item{padding:8px 13px;border-radius:8px;font-size:13.5px;color:var(--text2);cursor:pointer;transition:all .1s}
+.settings-nav-item:hover{background:var(--bg2);color:var(--text)}
+.settings-nav-item.active{background:var(--bg2);color:var(--text);font-weight:500}
+.settings-panel{display:none}
+.settings-panel.active{display:block}
+.settings-section{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:22px 24px;margin-bottom:16px}
+.settings-section-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;letter-spacing:-.01em}
+.settings-section-desc{font-size:13px;color:var(--text3);font-weight:300;margin-bottom:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* EMPTY STATE */
+.empty-state{display:flex;flex-direction:column;align-items:center;text-align:center;padding:60px 32px;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:16px;opacity:.4}
+.empty-title{font-size:16px;font-weight:600;color:var(--text2);margin-bottom:8px}
+.empty-desc{font-size:14px;color:var(--text3);line-height:1.6;max-width:340px;font-weight:300}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;gap:4px;padding:14px 20px;border-top:1px solid var(--border)}
+.page-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .1s;color:var(--text2)}
+.page-btn:hover,.page-btn.on{background:var(--text);color:#fff;border-color:var(--text)}
+.page-info{font-size:12.5px;color:var(--text4);margin-left:auto}
+
+/* MOBILE */
+@media(max-width:820px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .chart-row{grid-template-columns:1fr}
+  .model-cards-grid{grid-template-columns:1fr}
+  .wb-layout{grid-template-columns:1fr;height:auto}
+  .settings-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .page-content{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="tb-brand" onclick="showPage('dashboard')">
+    <svg width="24" height="24" viewBox="0 0 100 100">
+      <defs>
+        <radialGradient id="c1" cx="28%" cy="28%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#9ab4ec"/></radialGradient>
+        <radialGradient id="c2" cx="72%" cy="28%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#9ab4ec"/></radialGradient>
+        <radialGradient id="c3" cx="28%" cy="72%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#7ba4e8"/></radialGradient>
+        <radialGradient id="c4" cx="72%" cy="72%" r="72%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#7ba4e8"/></radialGradient>
+      </defs>
+      <path d="M50 45C43 25,17 16,10 30C4 43,18 62,50 49Z" fill="url(#c1)"/>
+      <path d="M50 45C57 25,83 16,90 30C96 43,82 62,50 49Z" fill="url(#c2)"/>
+      <path d="M50 54C38 58,16 71,21 82C27 91,44 86,50 60Z" fill="url(#c3)"/>
+      <path d="M50 54C62 58,84 71,79 82C73 91,56 86,50 60Z" fill="url(#c4)"/>
+      <ellipse cx="50" cy="51" rx="2.2" ry="9" fill="#c4d4f2" opacity=".85"/>
+    </svg>
+    Area
+  </div>
+  <div class="tb-divider"></div>
+  <div class="tb-org">My Workspace <span class="ch">&#9660;</span></div>
+  <div class="tb-right">
+    <div class="tb-icon-btn" title="Notifications">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5a4.5 4.5 0 014.5 4.5v3l1 1.5H2L3 9V6a4.5 4.5 0 014.5-4.5zM6 12.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </div>
+    <div class="tb-icon-btn" title="Help">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5.5a2 2 0 113.5 1.3c-.5.5-1.5 1-1.5 1.7v.5M7.5 11v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </div>
+    <button class="tb-new-btn" onclick="showPage('workbench')">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      New request
+    </button>
+    <div class="tb-avatar">S</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-workspace">
+    <div class="sb-ws-label">Workspace</div>
+    <div class="sb-ws-name">My Workspace <span style="font-size:11px;color:var(--text4)">&#9660;</span></div>
+    <div class="sb-ws-plan"><span class="sb-ws-dot"></span> Free Plan &middot; 5 RPM</div>
+  </div>
+  <div class="sb-section" style="margin-top:16px">Main</div>
+  <div class="sb-link active" onclick="showPage('dashboard')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+    Dashboard
+  </div>
+  <div class="sb-link" onclick="showPage('workbench')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 5l3 3-3 3M9 11h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Workbench
+  </div>
+  <div class="sb-link" onclick="showPage('api-keys')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="8" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M9 8h6M12 6v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    API Keys
+  </div>
+  <div class="sb-link" onclick="showPage('usage')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 2-2.5L14 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Usage
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">Build</div>
+  <div class="sb-link" onclick="showPage('models')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M8 4v4l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Models
+    <span class="sb-badge blue">3</span>
+  </div>
+  <div class="sb-link" onclick="showPage('logs')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Request Logs
+  </div>
+  <div class="sb-link" onclick="showPage('team')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-3 2-4.5 5-4.5s5 1.5 5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="12" cy="5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M14 14c0-2-1-3.5-2-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Team
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">Account</div>
+  <div class="sb-link" onclick="showPage('billing')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 7h14" stroke="currentColor" stroke-width="1.3"/></svg>
+    Billing
+  </div>
+  <div class="sb-link" onclick="showPage('settings')">
+    <svg class="sb-link-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M13 3l-1.5 1.5M4.5 11.5L3 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Settings
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page-content active" id="page-dashboard">
+  <div class="page-hdr-row">
+    <div class="page-hdr">
+      <h1>Dashboard</h1>
+      <p>Overview of your API usage and recent activity</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <select class="form-select btn-sm" style="padding:6px 12px;font-size:13px">
+        <option>Last 7 days</option><option>Last 30 days</option><option>Last 90 days</option>
+      </select>
+      <button class="btn btn-outline btn-sm" onclick="showPage('logs')">View logs</button>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="sc-label">Total Requests</div>
+      <div class="sc-value">48,291</div>
+      <div class="sc-trend up">&#8593; 12.4% vs last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Input Tokens</div>
+      <div class="sc-value">2.4M</div>
+      <div class="sc-trend up">&#8593; 8.1% vs last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Output Tokens</div>
+      <div class="sc-value">842K</div>
+      <div class="sc-trend down">&#8595; 2.3% vs last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Total Cost</div>
+      <div class="sc-value">$18.42</div>
+      <div class="sc-trend up">&#8593; 5.6% vs last week</div>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-card">
+      <div class="chart-hdr">
+        <div class="chart-title">Request Volume</div>
+        <div class="chart-period">
+          <button class="on">7d</button>
+          <button>30d</button>
+          <button>90d</button>
+        </div>
+      </div>
+      <div class="bar-chart" id="req-chart">
+        <div style="display:flex;flex-direction:column;flex:1;gap:4px">
+          <div style="display:flex;align-items:flex-end;gap:4px;height:100px">
+            <div class="bar" style="height:45%"></div>
+            <div class="bar" style="height:62%"></div>
+            <div class="bar" style="height:58%"></div>
+            <div class="bar" style="height:80%"></div>
+            <div class="bar" style="height:70%"></div>
+            <div class="bar" style="height:92%"></div>
+            <div class="bar hi" style="height:100%"></div>
+          </div>
+          <div class="bar-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-hdr"><div class="chart-title">By Model</div></div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#eceae2" stroke-width="14"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#19190f" stroke-width="14" stroke-dasharray="143 96" stroke-dashoffset="25" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#c8773a" stroke-width="14" stroke-dasharray="72 167" stroke-dashoffset="-118" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#9ab4ec" stroke-width="14" stroke-dasharray="24 215" stroke-dashoffset="-190" transform="rotate(-90 50 50)"/>
+          <text x="50" y="54" text-anchor="middle" font-size="11" font-weight="600" fill="#19190f">48.3K</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="dl-item"><div class="dl-dot" style="background:#19190f"></div>Sonnet 3.5<div class="dl-val">59%</div></div>
+          <div class="dl-item"><div class="dl-dot" style="background:#c8773a"></div>Haiku 3.5<div class="dl-val">30%</div></div>
+          <div class="dl-item"><div class="dl-dot" style="background:#9ab4ec"></div>Opus 3<div class="dl-val">11%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="tc-head">
+      <div class="tc-title">Recent Requests</div>
+      <div class="tc-actions">
+        <button class="btn btn-outline btn-sm" onclick="showPage('logs')">View all</button>
+      </div>
+    </div>
+    <table class="tc-table">
+      <thead><tr><th>Request ID</th><th>Model</th><th>Tokens</th><th>Duration</th><th>Status</th><th>Time</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">msg_01XF...</span></td><td>area-sonnet-3-5</td><td><span class="mono">1,284</span></td><td><span class="mono">1.2s</span></td><td><span class="badge badge-green">200 OK</span></td><td><span class="mono">2s ago</span></td></tr>
+        <tr><td><span class="mono">msg_02AB...</span></td><td>area-haiku-3-5</td><td><span class="mono">482</span></td><td><span class="mono">0.3s</span></td><td><span class="badge badge-green">200 OK</span></td><td><span class="mono">14s ago</span></td></tr>
+        <tr><td><span class="mono">msg_03CD...</span></td><td>area-opus-3</td><td><span class="mono">4,891</span></td><td><span class="mono">5.8s</span></td><td><span class="badge badge-green">200 OK</span></td><td><span class="mono">32s ago</span></td></tr>
+        <tr><td><span class="mono">msg_04EF...</span></td><td>area-sonnet-3-5</td><td><span class="mono">892</span></td><td><span class="mono">-</span></td><td><span class="badge badge-red">429 RL</span></td><td><span class="mono">1m ago</span></td></tr>
+        <tr><td><span class="mono">msg_05GH...</span></td><td>area-haiku-3-5</td><td><span class="mono">204</span></td><td><span class="mono">0.2s</span></td><td><span class="badge badge-green">200 OK</span></td><td><span class="mono">2m ago</span></td></tr>
+        <tr><td><span class="mono">msg_06IJ...</span></td><td>area-sonnet-3-5</td><td><span class="mono">2,104</span></td><td><span class="mono">2.4s</span></td><td><span class="badge badge-green">200 OK</span></td><td><span class="mono">4m ago</span></td></tr>
+        <tr><td><span class="mono">msg_07KL...</span></td><td>area-opus-3</td><td><span class="mono">7,230</span></td><td><span class="mono">8.1s</span></td><td><span class="badge badge-green">200 OK</span></td><td><span class="mono">6m ago</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ WORKBENCH ═══ -->
+<div class="page-content" id="page-workbench">
+  <div class="page-hdr-row">
+    <div class="page-hdr"><h1>Workbench</h1><p>Test and iterate on prompts interactively</p></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline btn-sm">Save prompt</button>
+      <button class="btn btn-outline btn-sm">Load example</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px">
+    <div class="form-group" style="margin-bottom:0">
+      <label class="form-label">Model</label>
+      <select class="form-select" id="wb-model-sel">
+        <option value="area-sonnet-3-5-20241022">Area Sonnet 3.5</option>
+        <option value="area-sonnet-3-7-20250219">Area Sonnet 3.7</option>
+        <option value="area-opus-3-20240229">Area Opus 3</option>
+        <option value="area-haiku-3-5-20241022">Area Haiku 3.5</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:0">
+      <label class="form-label">Temperature: <span id="temp-val">1.0</span></label>
+      <input type="range" min="0" max="1" step="0.1" value="1" style="margin-top:8px;width:100%" oninput="document.getElementById('temp-val').textContent=this.value"/>
+    </div>
+  </div>
+  <div class="wb-panel" style="margin-bottom:14px">
+    <div class="wb-panel-head"><div class="wb-panel-title">System Prompt</div><button class="btn btn-xs btn-outline" onclick="document.getElementById('wb-system').value=''">Clear</button></div>
+    <textarea id="wb-system" class="wb-textarea" style="height:80px" placeholder="You are a helpful assistant..."></textarea>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="wb-panel">
+      <div class="wb-panel-head"><div class="wb-panel-title">User Message</div></div>
+      <textarea id="wb-user" class="wb-textarea" style="min-height:160px" placeholder="Enter your message here..."></textarea>
+      <div class="wb-bottom">
+        <span class="wb-token-count" id="wb-tokens">~0 tokens</span>
+        <button class="wb-run-btn" id="wb-run-btn" onclick="runWorkbench()">
+          <div class="wb-spin" id="wb-spin"></div>
+          <span id="wb-btn-text">Run</span>
+        </button>
+      </div>
+    </div>
+    <div class="wb-panel">
+      <div class="wb-panel-head"><div class="wb-panel-title">Response</div><div id="wb-meta" style="font-size:12px;color:var(--text4);font-family:var(--mono)"></div></div>
+      <div class="wb-output" id="wb-output"><div style="color:var(--text4);font-size:13px">Response will appear here...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ API KEYS ═══ -->
+<div class="page-content" id="page-api-keys">
+  <div class="page-hdr-row">
+    <div class="page-hdr"><h1>API Keys</h1><p>Manage keys for your workspace</p></div>
+    <button class="btn btn-dark" onclick="createKeyModal()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Create new key
+    </button>
+  </div>
+  <div class="callout-info" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13.5px;color:#1e40af">
+    &#9432;&nbsp; Keep your keys secret. Never expose them in client-side code or version control. Use environment variables.
+  </div>
+  <div class="key-card">
+    <div class="key-row">
+      <div class="key-icon">&#128273;</div>
+      <div class="key-info">
+        <div class="key-name">Default key</div>
+        <div class="key-val">sk-area-••••••••••••••••••••••••••••••••••••••••••••VoYEL</div>
+      </div>
+      <div class="key-meta">
+        <span class="badge badge-green">Active</span>
+        <span>Created Apr 1</span>
+        <span>Last used 2m ago</span>
+        <button class="btn btn-outline btn-xs" onclick="copyKey(this)">Copy</button>
+        <button class="btn btn-danger btn-xs">Revoke</button>
+      </div>
+    </div>
+    <div class="key-row">
+      <div class="key-icon">&#128273;</div>
+      <div class="key-info">
+        <div class="key-name">Production key</div>
+        <div class="key-val">sk-area-••••••••••••••••••••••••••••••••••••••••••••Xk9J2</div>
+      </div>
+      <div class="key-meta">
+        <span class="badge badge-green">Active</span>
+        <span>Created Mar 22</span>
+        <span>Last used 1h ago</span>
+        <button class="btn btn-outline btn-xs" onclick="copyKey(this)">Copy</button>
+        <button class="btn btn-danger btn-xs">Revoke</button>
+      </div>
+    </div>
+    <div class="key-row">
+      <div class="key-icon">&#128273;</div>
+      <div class="key-info">
+        <div class="key-name">Test key</div>
+        <div class="key-val">sk-area-••••••••••••••••••••••••••••••••••••••••••••mN3Pt</div>
+      </div>
+      <div class="key-meta">
+        <span class="badge badge-gray">Inactive</span>
+        <span>Created Mar 10</span>
+        <span>Never used</span>
+        <button class="btn btn-outline btn-xs" onclick="copyKey(this)">Copy</button>
+        <button class="btn btn-danger btn-xs">Revoke</button>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:24px">
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px">Key Usage Limits</div>
+    <div class="table-card">
+      <table class="tc-table">
+        <thead><tr><th>Key Name</th><th>Monthly Spend Limit</th><th>Spend This Month</th><th>Requests Today</th></tr></thead>
+        <tbody>
+          <tr><td>Default key</td><td>No limit</td><td>$4.20</td><td>1,204</td></tr>
+          <tr><td>Production key</td><td>$100.00</td><td>$11.84</td><td>18,293</td></tr>
+          <tr><td>Test key</td><td>$10.00</td><td>$0.00</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ USAGE ═══ -->
+<div class="page-content" id="page-usage">
+  <div class="page-hdr-row">
+    <div class="page-hdr"><h1>Usage</h1><p>Token consumption and cost breakdown by model and time</p></div>
+    <select class="form-select" style="padding:7px 13px;font-size:13.5px">
+      <option>April 2025</option><option>March 2025</option><option>February 2025</option>
+    </select>
+  </div>
+  <div class="stat-row">
+    <div class="stat-card"><div class="sc-label">Input Tokens</div><div class="sc-value">2.4M</div><div class="sc-sub">$7.20 this month</div></div>
+    <div class="stat-card"><div class="sc-label">Output Tokens</div><div class="sc-value">842K</div><div class="sc-sub">$12.63 this month</div></div>
+    <div class="stat-card"><div class="sc-label">Cache Reads</div><div class="sc-value">680K</div><div class="sc-sub">$0.54 saved via cache</div></div>
+    <div class="stat-card"><div class="sc-label">Total Cost</div><div class="sc-value">$18.42</div><div class="sc-sub">&#8593; $3.18 vs last month</div></div>
+  </div>
+  <div class="table-card">
+    <div class="tc-head"><div class="tc-title">Usage by Model</div></div>
+    <table class="tc-table">
+      <thead><tr><th>Model</th><th>Requests</th><th>Input Tokens</th><th>Output Tokens</th><th>Cache Reads</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td><strong>area-sonnet-3-5</strong></td><td>28,491</td><td>1,420,000</td><td>512,000</td><td>480,000</td><td>$10.92</td></tr>
+        <tr><td><strong>area-haiku-3-5</strong></td><td>14,700</td><td>840,000</td><td>282,000</td><td>200,000</td><td>$1.80</td></tr>
+        <tr><td><strong>area-opus-3</strong></td><td>5,100</td><td>140,000</td><td>48,000</td><td>0</td><td>$5.70</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="chart-card" style="margin-top:14px">
+    <div class="chart-hdr"><div class="chart-title">Daily Token Usage — April 2025</div></div>
+    <div class="usage-bar-wrap">
+      <div class="usage-bar-item"><div class="ub-header"><span class="ub-label">area-sonnet-3-5</span><span class="ub-val">1,420,000 tokens</span></div><div class="ub-track"><div class="ub-fill" style="width:59%;background:var(--text)"></div></div></div>
+      <div class="usage-bar-item"><div class="ub-header"><span class="ub-label">area-haiku-3-5</span><span class="ub-val">840,000 tokens</span></div><div class="ub-track"><div class="ub-fill" style="width:35%;background:var(--accent)"></div></div></div>
+      <div class="usage-bar-item"><div class="ub-header"><span class="ub-label">area-opus-3</span><span class="ub-val">140,000 tokens</span></div><div class="ub-track"><div class="ub-fill" style="width:6%;background:#9ab4ec"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODELS ═══ -->
+<div class="page-content" id="page-models">
+  <div class="page-hdr-row">
+    <div class="page-hdr"><h1>Models</h1><p>Available models and their capabilities</p></div>
+  </div>
+  <div class="model-cards-grid">
+    <div class="mc flagship">
+      <div class="mc-top"><span class="mc-badge">Most Capable</span></div>
+      <div class="mc-name">Area Opus 3</div>
+      <div class="mc-id">area-opus-3-20240229</div>
+      <div class="mc-desc">Maximum intelligence. Complex reasoning, nuanced writing, and deep expertise across all domains.</div>
+      <div class="mc-specs">
+        <div class="mc-spec"><span class="mc-sk">Context</span><span class="mc-sv">200K tokens</span></div>
+        <div class="mc-spec"><span class="mc-sk">Input</span><span class="mc-sv">$15 / MTok</span></div>
+        <div class="mc-spec"><span class="mc-sk">Output</span><span class="mc-sv">$75 / MTok</span></div>
+        <div class="mc-spec"><span class="mc-sk">Extended thinking</span><span class="mc-sv">&#10003; Supported</span></div>
+      </div>
+      <button class="mc-use-btn" onclick="showPage('workbench')">Use in Workbench</button>
+    </div>
+    <div class="mc">
+      <div class="mc-top"><span class="mc-badge">Best Balance</span><span class="badge badge-blue" style="font-size:10px">Latest</span></div>
+      <div class="mc-name">Area Sonnet 3.7</div>
+      <div class="mc-id">area-sonnet-3-7-20250219</div>
+      <div class="mc-desc">High performance and speed. Improved coding and reasoning. Supports extended thinking.</div>
+      <div class="mc-specs">
+        <div class="mc-spec"><span class="mc-sk">Context</span><span class="mc-sv">200K tokens</span></div>
+        <div class="mc-spec"><span class="mc-sk">Input</span><span class="mc-sv">$3 / MTok</span></div>
+        <div class="mc-spec"><span class="mc-sk">Output</span><span class="mc-sv">$15 / MTok</span></div>
+        <div class="mc-spec"><span class="mc-sk">Extended thinking</span><span class="mc-sv">&#10003; Supported</span></div>
+      </div>
+      <button class="mc-use-btn btn-outline" onclick="showPage('workbench')">Use in Workbench</button>
+    </div>
+    <div class="mc">
+      <div class="mc-top"><span class="mc-badge">Speed + Cost</span></div>
+      <div class="mc-name">Area Haiku 3.5</div>
+      <div class="mc-id">area-haiku-3-5-20241022</div>
+      <div class="mc-desc">Fastest model. Sub-100ms latency for simple tasks. Vision and tools fully supported.</div>
+      <div class="mc-specs">
+        <div class="mc-spec"><span class="mc-sk">Context</span><span class="mc-sv">200K tokens</span></div>
+        <div class="mc-spec"><span class="mc-sk">Input</span><span class="mc-sv">$0.80 / MTok</span></div>
+        <div class="mc-spec"><span class="mc-sk">Output</span><span class="mc-sv">$4 / MTok</span></div>
+        <div class="mc-spec"><span class="mc-sk">Extended thinking</span><span class="mc-sv">&#10007; Not available</span></div>
+      </div>
+      <button class="mc-use-btn btn-outline" onclick="showPage('workbench')">Use in Workbench</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOGS ═══ -->
+<div class="page-content" id="page-logs">
+  <div class="page-hdr-row">
+    <div class="page-hdr"><h1>Request Logs</h1><p>Full history of API requests from your workspace</p></div>
+    <div style="display:flex;gap:8px">
+      <input class="form-input" placeholder="Search by request ID..." style="width:240px;padding:7px 13px;font-size:13px"/>
+      <select class="form-select" style="padding:7px 12px;font-size:13px"><option>All models</option><option>Sonnet 3.5</option><option>Haiku 3.5</option><option>Opus 3</option></select>
+      <select class="form-select" style="padding:7px 12px;font-size:13px"><option>All statuses</option><option>200 OK</option><option>4xx errors</option><option>5xx errors</option></select>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="tc-head"><div class="tc-title">48,291 requests this week</div><button class="btn btn-outline btn-sm">Export CSV</button></div>
+    <table class="tc-table">
+      <thead><tr><th>Request ID</th><th>Model</th><th>In tokens</th><th>Out tokens</th><th>Duration</th><th>Cost</th><th>Status</th><th>Time</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">msg_01XF...</span></td><td>area-sonnet-3-5</td><td><span class="mono">842</span></td><td><span class="mono">442</span></td><td><span class="mono">1.2s</span></td><td><span class="mono">$0.0092</span></td><td><span class="badge badge-green">200</span></td><td><span class="mono">10:54:21</span></td></tr>
+        <tr><td><span class="mono">msg_02AB...</span></td><td>area-haiku-3-5</td><td><span class="mono">312</span></td><td><span class="mono">170</span></td><td><span class="mono">0.3s</span></td><td><span class="mono">$0.0009</span></td><td><span class="badge badge-green">200</span></td><td><span class="mono">10:54:07</span></td></tr>
+        <tr><td><span class="mono">msg_03CD...</span></td><td>area-opus-3</td><td><span class="mono">2,891</span></td><td><span class="mono">2,000</span></td><td><span class="mono">5.8s</span></td><td><span class="mono">$0.1934</span></td><td><span class="badge badge-green">200</span></td><td><span class="mono">10:53:48</span></td></tr>
+        <tr><td><span class="mono">msg_04EF...</span></td><td>area-sonnet-3-5</td><td><span class="mono">-</span></td><td><span class="mono">-</span></td><td><span class="mono">-</span></td><td><span class="mono">-</span></td><td><span class="badge badge-red">429</span></td><td><span class="mono">10:53:12</span></td></tr>
+        <tr><td><span class="mono">msg_05GH...</span></td><td>area-haiku-3-5</td><td><span class="mono">104</span></td><td><span class="mono">100</span></td><td><span class="mono">0.2s</span></td><td><span class="mono">$0.0005</span></td><td><span class="badge badge-green">200</span></td><td><span class="mono">10:52:55</span></td></tr>
+        <tr><td><span class="mono">msg_06IJ...</span></td><td>area-sonnet-3-5</td><td><span class="mono">1,240</span></td><td><span class="mono">864</span></td><td><span class="mono">2.4s</span></td><td><span class="mono">$0.0167</span></td><td><span class="badge badge-green">200</span></td><td><span class="mono">10:52:30</span></td></tr>
+        <tr><td><span class="mono">msg_07KL...</span></td><td>area-opus-3</td><td><span class="mono">4,230</span></td><td><span class="mono">3,000</span></td><td><span class="mono">8.1s</span></td><td><span class="mono">$0.2895</span></td><td><span class="badge badge-green">200</span></td><td><span class="mono">10:51:08</span></td></tr>
+        <tr><td><span class="mono">msg_08MN...</span></td><td>area-haiku-3-5</td><td><span class="mono">520</span></td><td><span class="mono">-</span></td><td><span class="mono">-</span></td><td><span class="mono">-</span></td><td><span class="badge badge-red">400</span></td><td><span class="mono">10:50:44</span></td></tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="page-btn on">1</div>
+      <div class="page-btn">2</div>
+      <div class="page-btn">3</div>
+      <div class="page-btn">...</div>
+      <div class="page-btn">48</div>
+      <span class="page-info">Showing 1–8 of 48,291 requests</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TEAM ═══ -->
+<div class="page-content" id="page-team">
+  <div class="page-hdr-row">
+    <div class="page-hdr"><h1>Team</h1><p>Manage workspace members and permissions</p></div>
+    <button class="btn btn-dark">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Invite member
+    </button>
+  </div>
+  <div class="table-card">
+    <div class="tc-head"><div class="tc-title">3 members</div></div>
+    <table class="tc-table">
+      <thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Last active</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#9ab4ec,#7b8cde);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#fff">S</div><div><div style="font-weight:500">Sahil Suthariya</div><div style="font-size:12px;color:var(--text3)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c9baa8a1a0a589a8bbaca8e7a8a0">[email&#160;protected]</a></div></div></div></td>
+          <td><span class="badge badge-blue">Owner</span></td>
+          <td><span class="badge badge-green">Active</span></td>
+          <td><span class="mono">Just now</span></td>
+          <td><span style="font-size:13px;color:var(--text4)">—</span></td>
+        </tr>
+        <tr>
+          <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#fde68a,#f59e0b);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#fff">R</div><div><div style="font-weight:500">Raj Patel</div><div style="font-size:12px;color:var(--text3)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fa889b90ba9b889f9bd49b93">[email&#160;protected]</a></div></div></div></td>
+          <td><span class="badge badge-gray">Developer</span></td>
+          <td><span class="badge badge-green">Active</span></td>
+          <td><span class="mono">2h ago</span></td>
+          <td><div class="tc-action"><button class="btn btn-outline btn-xs">Edit</button><button class="btn btn-danger btn-xs">Remove</button></div></td>
+        </tr>
+        <tr>
+          <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#bbf7d0,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#fff">A</div><div><div style="font-weight:500">Ananya Sharma</div><div style="font-size:12px;color:var(--text3)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8beae5eae5f2eacbeaf9eeeaa5eae2">[email&#160;protected]</a></div></div></div></td>
+          <td><span class="badge badge-gray">Viewer</span></td>
+          <td><span class="badge badge-yellow">Invited</span></td>
+          <td><span class="mono">Never</span></td>
+          <td><div class="tc-action"><button class="btn btn-outline btn-xs">Resend</button><button class="btn btn-danger btn-xs">Cancel</button></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:20px">
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px">Role Permissions</div>
+    <div class="table-card">
+      <table class="tc-table">
+        <thead><tr><th>Permission</th><th>Owner</th><th>Developer</th><th>Viewer</th></tr></thead>
+        <tbody>
+          <tr><td>Make API requests</td><td>&#9989;</td><td>&#9989;</td><td>&#10060;</td></tr>
+          <tr><td>View usage &amp; logs</td><td>&#9989;</td><td>&#9989;</td><td>&#9989;</td></tr>
+          <tr><td>Manage API keys</td><td>&#9989;</td><td>&#9989;</td><td>&#10060;</td></tr>
+          <tr><td>Manage team</td><td>&#9989;</td><td>&#10060;</td><td>&#10060;</td></tr>
+          <tr><td>Manage billing</td><td>&#9989;</td><td>&#10060;</td><td>&#10060;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BILLING ═══ -->
+<div class="page-content" id="page-billing">
+  <div class="page-hdr-row">
+    <div class="page-hdr"><h1>Billing</h1><p>Manage your plan, payment method, and invoices</p></div>
+    <button class="btn btn-dark">Upgrade plan</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px">
+    <div class="settings-section">
+      <div class="settings-section-title">Current Plan</div>
+      <div style="margin-top:16px">
+        <div style="font-size:28px;font-weight:600;color:var(--text)">Free</div>
+        <div style="font-size:13.5px;color:var(--text3);margin-top:6px;font-weight:300;line-height:1.6">5 req/min &bull; 25K input tokens/min &bull; Free $5 credit on signup</div>
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px"><span style="color:var(--green)">&#10003;</span> Access to all models</div>
+          <div style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px"><span style="color:var(--green)">&#10003;</span> Prompt Workbench</div>
+          <div style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px"><span style="color:var(--green)">&#10003;</span> Request logs (7 days)</div>
+          <div style="font-size:13px;color:var(--text4);display:flex;align-items:center;gap:8px"><span>&#10007;</span> No prompt caching</div>
+          <div style="font-size:13px;color:var(--text4);display:flex;align-items:center;gap:8px"><span>&#10007;</span> No batch API</div>
+        </div>
+        <button class="btn btn-dark" style="margin-top:20px;width:100%">Upgrade to Tier 1</button>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-title">Usage This Month</div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+        <div class="usage-bar-item"><div class="ub-header"><span class="ub-label">Spend</span><span class="ub-val">$18.42 of $5.00 credit</span></div><div class="ub-track"><div class="ub-fill" style="width:100%;background:var(--accent)"></div></div></div>
+        <div class="usage-bar-item"><div class="ub-header"><span class="ub-label">Requests</span><span class="ub-val">48,291 this month</span></div><div class="ub-track"><div class="ub-fill" style="width:48%;background:var(--text)"></div></div></div>
+        <div class="usage-bar-item"><div class="ub-header"><span class="ub-label">Rate limit usage</span><span class="ub-val">Peak: 4.8/5 RPM</span></div><div class="ub-track"><div class="ub-fill" style="width:96%;background:#9ab4ec"></div></div></div>
+        <div style="margin-top:4px;padding:12px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;font-size:13px;color:#92400e">&#9888; Free credit nearly exhausted. Add a payment method to continue.</div>
+      </div>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="tc-head"><div class="tc-title">Invoice History</div><button class="btn btn-outline btn-sm">Download all</button></div>
+    <table class="tc-table">
+      <thead><tr><th>Invoice</th><th>Period</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">INV-2025-04</span></td><td>Apr 1–14, 2025</td><td>$18.42</td><td><span class="badge badge-yellow">Pending</span></td><td><button class="btn btn-outline btn-xs">View</button></td></tr>
+        <tr><td><span class="mono">INV-2025-03</span></td><td>Mar 1–31, 2025</td><td>$24.18</td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-outline btn-xs">Download</button></td></tr>
+        <tr><td><span class="mono">INV-2025-02</span></td><td>Feb 1–28, 2025</td><td>$19.73</td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-outline btn-xs">Download</button></td></tr>
+        <tr><td><span class="mono">INV-2025-01</span></td><td>Jan 1–31, 2025</td><td>$11.04</td><td><span class="badge badge-green">Paid</span></td><td><button class="btn btn-outline btn-xs">Download</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ SETTINGS ═══ -->
+<div class="page-content" id="page-settings">
+  <div class="page-hdr"><h1>Settings</h1><p>Workspace and account preferences</p></div>
+  <div class="settings-grid">
+    <div class="settings-nav">
+      <div class="settings-nav-item active" onclick="setSettingsPanel('general',this)">General</div>
+      <div class="settings-nav-item" onclick="setSettingsPanel('notifications',this)">Notifications</div>
+      <div class="settings-nav-item" onclick="setSettingsPanel('security',this)">Security</div>
+      <div class="settings-nav-item" onclick="setSettingsPanel('danger',this)">Danger zone</div>
+    </div>
+    <div>
+      <div class="settings-panel active" id="panel-general">
+        <div class="settings-section">
+          <div class="settings-section-title">Workspace</div>
+          <div class="settings-section-desc">Basic workspace information and preferences.</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Workspace name</label><input class="form-input" value="My Workspace"/></div>
+            <div class="form-group"><label class="form-label">Workspace URL</label><input class="form-input" value="my-workspace"/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Description</label><input class="form-input" placeholder="Optional description..."/></div>
+          <button class="btn btn-dark btn-sm" style="margin-top:4px">Save changes</button>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title">Profile</div>
+          <div class="settings-section-desc">Your personal account information.</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Display name</label><input class="form-input" value="Sahil Suthariya"/></div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="sahil@area.ai" disabled style="opacity:.6"/></div>
+          </div>
+          <button class="btn btn-dark btn-sm">Update profile</button>
+        </div>
+      </div>
+      <div class="settings-panel" id="panel-notifications">
+        <div class="settings-section">
+          <div class="settings-section-title">Notification Preferences</div>
+          <div class="settings-section-desc">Choose what you want to be notified about.</div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Usage alerts</div><div class="setting-desc">Notify when spending reaches 80% of budget</div></div><label class="form-toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Rate limit warnings</div><div class="setting-desc">Alert when approaching rate limits</div></div><label class="form-toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">New model releases</div><div class="setting-desc">Get notified when new models are available</div></div><label class="form-toggle"><input type="checkbox"/><span class="toggle-slider"></span></label></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">API status updates</div><div class="setting-desc">Incidents and maintenance windows</div></div><label class="form-toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Weekly usage digest</div><div class="setting-desc">Summary of usage stats every Monday</div></div><label class="form-toggle"><input type="checkbox"/><span class="toggle-slider"></span></label></div>
+        </div>
+      </div>
+      <div class="settings-panel" id="panel-security">
+        <div class="settings-section">
+          <div class="settings-section-title">Security</div>
+          <div class="settings-section-desc">Manage authentication and access security settings.</div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Two-factor authentication</div><div class="setting-desc">Add an extra layer of security to your account</div></div><button class="btn btn-outline btn-sm">Enable 2FA</button></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Active sessions</div><div class="setting-desc">You have 2 active sessions across 2 devices</div></div><button class="btn btn-outline btn-sm">Manage sessions</button></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Login history</div><div class="setting-desc">View recent sign-in activity for your account</div></div><button class="btn btn-outline btn-sm">View history</button></div>
+        </div>
+      </div>
+      <div class="settings-panel" id="panel-danger">
+        <div class="settings-section" style="border-color:#fecaca">
+          <div class="settings-section-title" style="color:var(--red)">Danger Zone</div>
+          <div class="settings-section-desc">These actions are irreversible. Please proceed with caution.</div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Transfer ownership</div><div class="setting-desc">Transfer this workspace to another member</div></div><button class="btn btn-outline btn-sm">Transfer</button></div>
+          <div class="setting-row"><div class="setting-info"><div class="setting-title">Delete workspace</div><div class="setting-desc">Permanently delete this workspace and all its data</div></div><button class="btn btn-danger btn-sm">Delete workspace</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function showPage(id) {
+  document.querySelectorAll('.page-content').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sb-link').forEach(function(l){ l.classList.remove('active'); });
+  var pg = document.getElementById('page-' + id);
+  if (pg) pg.classList.add('active');
+  document.querySelectorAll('.sb-link').forEach(function(l) {
+    if ((l.getAttribute('onclick') || '').indexOf("'" + id + "'") !== -1) l.classList.add('active');
+  });
+}
+
+function setSettingsPanel(id, el) {
+  document.querySelectorAll('.settings-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.settings-nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  el.classList.add('active');
+}
+
+function copyKey(btn) {
+  btn.textContent = 'Copied!';
+  setTimeout(function(){ btn.textContent = 'Copy'; }, 2000);
+}
+
+function createKeyModal() {
+  var name = prompt('Key name:');
+  if (name) alert('Key "' + name + '" created! (In production this would show the full key once.)');
+}
+
+// Workbench
+var wbHistory = [];
+document.getElementById('wb-user') && document.getElementById('wb-user').addEventListener('input', function() {
+  var words = this.value.trim().split(/\s+/).filter(Boolean).length;
+  document.getElementById('wb-tokens').textContent = '~' + Math.round(words * 1.3) + ' tokens';
+});
+
+function runWorkbench() {
+  var userMsg = document.getElementById('wb-user').value.trim();
+  if (!userMsg) return;
+  var btn = document.getElementById('wb-run-btn');
+  var spin = document.getElementById('wb-spin');
+  var btnText = document.getElementById('wb-btn-text');
+  var output = document.getElementById('wb-output');
+  btn.disabled = true;
+  spin.style.display = 'block';
+  btnText.textContent = 'Running…';
+  output.innerHTML = '<div style="color:var(--text4);font-size:13px">Generating response...</div>';
+  
+  // Simulate response (in production this calls the real API)
+  var system = document.getElementById('wb-system').value;
+  var model = document.getElementById('wb-model-sel').value;
+  
+  setTimeout(function() {
+    var responses = [
+      "I'd be happy to help with that. Based on your request, here's what I can provide:
+
+This is a simulated response from the Area Workbench. In production, this would make a real API call to the selected model and stream the response token by token.
+
+The response would include the full output from the model based on your system prompt and user message.",
+      "Great question! Here's my analysis:
+
+The Area API provides access to powerful language models through a simple REST interface. You can customize behavior through system prompts, adjust temperature for creativity vs. consistency, and stream responses for real-time output.
+
+Would you like me to elaborate on any specific aspect?",
+      "Here's a breakdown of what you're asking:
+
+1. **First point** — The model processes your input tokens and generates a contextually appropriate response.
+
+2. **Second point** — The system prompt guides the model's behavior throughout the conversation.
+
+3. **Third point** — You can adjust parameters like temperature and max_tokens to fine-tune output quality.
+
+Let me know if you'd like more details!"
+    ];
+    var resp = responses[Math.floor(Math.random() * responses.length)];
+    var inTok = Math.round(userMsg.split(/\s+/).length * 1.3 + (system ? system.split(/\s+/).length * 1.3 : 0));
+    var outTok = Math.round(resp.split(/\s+/).length * 1.3);
+    
+    output.innerHTML = '<div style="white-space:pre-wrap;line-height:1.7">' + resp + '</div>';
+    document.getElementById('wb-meta').textContent = inTok + ' in · ' + outTok + ' out · ' + model.split('-').slice(1,3).join('-')

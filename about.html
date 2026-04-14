@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>About Area — Our Mission, Team & Story</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#faf9f6;--bg2:#f3f1eb;--bg3:#eceae2;
+  --white:#fff;--border:#dedad0;--border2:#ccc8bc;
+  --text:#19190f;--text2:#48483a;--text3:#78786a;--text4:#a8a89a;
+  --accent:#c8773a;
+  --font:'DM Sans','Helvetica Neue',sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --nav-h:60px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--font)}ul{list-style:none}
+
+nav{position:sticky;top:0;z-index:200;height:var(--nav-h);background:rgba(250,249,246,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px}
+.nav-brand{display:flex;align-items:center;gap:9px;margin-right:36px;flex-shrink:0;cursor:pointer}
+.nav-brand-name{font-size:18px;font-weight:600;letter-spacing:-.04em}
+.nav-links{display:flex;align-items:center;gap:1px;flex:1}
+.nav-link{padding:7px 13px;border-radius:7px;font-size:14px;color:var(--text2);cursor:pointer;transition:background .12s,color .12s}
+.nav-link:hover,.nav-link.active{background:var(--bg2);color:var(--text);font-weight:500}
+.nav-actions{display:flex;gap:8px;margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;border:none;cursor:pointer;transition:all .14s;font-family:var(--font)}
+.btn-sm{padding:6.5px 13px;font-size:13.5px}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}.btn-outline:hover{background:var(--bg2)}
+.btn-dark{background:var(--text);color:#fff}.btn-dark:hover{background:#2c2c20}
+
+.container{max-width:1100px;margin:0 auto;padding:0 32px}
+.section{padding:88px 0}
+.section-alt{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.s-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text4);margin-bottom:14px;display:block}
+.s-heading{font-family:var(--serif);font-size:clamp(36px,5vw,58px);font-weight:400;letter-spacing:-.03em;line-height:1.08;margin-bottom:20px}
+.s-sub{font-size:16.5px;color:var(--text2);font-weight:300;line-height:1.7;max-width:540px;margin-bottom:0}
+
+/* HERO */
+.about-hero{padding:88px 0 72px}
+.about-hero .s-heading{max-width:700px;margin-bottom:22px}
+.about-hero .s-sub{max-width:580px;font-size:17px}
+
+/* NUMBERS */
+.numbers-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--white)}
+.numbers-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.num-card{padding:44px 32px;text-align:center;border-right:1px solid var(--border)}
+.num-card:last-child{border-right:none}
+.num-val{font-family:var(--serif);font-size:52px;font-weight:400;letter-spacing:-.05em;color:var(--text);line-height:1;margin-bottom:8px}
+.num-lbl{font-size:14px;color:var(--text3);font-weight:300}
+
+/* MISSION */
+.mission-section{padding:96px 0}
+.mission-pull{font-family:var(--serif);font-size:clamp(24px,3.5vw,40px);font-weight:400;letter-spacing:-.028em;line-height:1.3;color:var(--text);max-width:800px;margin-bottom:32px}
+.mission-pull em{font-style:italic;color:var(--text3)}
+.mission-body p{font-size:15.5px;color:var(--text2);font-weight:300;line-height:1.8;max-width:680px;margin-bottom:20px}
+
+/* VALUES */
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.value-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:36px;transition:border-color .14s,box-shadow .14s}
+.value-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.value-num{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text4);margin-bottom:18px}
+.value-title{font-family:var(--serif);font-size:22px;font-weight:400;letter-spacing:-.02em;color:var(--text);margin-bottom:12px;line-height:1.25}
+.value-body{font-size:14px;color:var(--text2);line-height:1.7;font-weight:300}
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.team-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;transition:border-color .14s,box-shadow .14s;cursor:default}
+.team-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.team-av{width:72px;height:72px;border-radius:50%;background:var(--bg2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;color:var(--text2);overflow:hidden}
+.team-name{font-size:14.5px;font-weight:500;color:var(--text);letter-spacing:-.01em}
+.team-role{font-size:12.5px;color:var(--text3);font-weight:300;line-height:1.5}
+.team-prev{font-size:11.5px;color:var(--text4)}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;border-left:2px solid var(--border);padding-left:32px;margin-left:12px}
+.tl-item{position:relative;padding-bottom:40px}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:-41px;top:2px;width:18px;height:18px;border-radius:50%;background:var(--text);border:3px solid var(--bg)}
+.tl-year{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text4);margin-bottom:6px}
+.tl-title{font-size:16px;font-weight:500;color:var(--text);margin-bottom:6px;letter-spacing:-.01em}
+.tl-body{font-size:14px;color:var(--text3);font-weight:300;line-height:1.65;max-width:540px}
+
+/* INVESTORS */
+.investor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.investor-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;transition:border-color .14s}
+.investor-card:hover{border-color:var(--border2)}
+.investor-logo{width:52px;height:52px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--text3);letter-spacing:-.02em}
+.investor-name{font-size:14px;font-weight:500;color:var(--text)}
+.investor-type{font-size:12px;color:var(--text4)}
+
+/* CAREERS TEASER */
+.careers-teaser{background:var(--text);border-radius:18px;padding:48px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+.careers-teaser h3{font-family:var(--serif);font-size:clamp(24px,3vw,36px);font-weight:400;letter-spacing:-.025em;color:#fff;margin-bottom:10px;line-height:1.2}
+.careers-teaser p{font-size:15px;color:rgba(255,255,255,.5);font-weight:300;line-height:1.65;max-width:440px}
+.careers-btns{display:flex;gap:10px;flex-shrink:0}
+.btn-white{padding:11px 22px;border-radius:9px;background:#fff;color:var(--text);border:none;font-size:14.5px;font-weight:500;cursor:pointer;font-family:var(--font);transition:background .14s}
+.btn-white:hover{background:#ece9e0}
+.btn-ghost-white{padding:11px 22px;border-radius:9px;background:transparent;color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.2);font-size:14.5px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .14s}
+.btn-ghost-white:hover{border-color:rgba(255,255,255,.5);color:#fff}
+
+/* FOOTER */
+footer{background:var(--text);color:#fff;padding:60px 32px 36px;margin-top:88px}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:44px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,.1)}
+.footer-brand-row{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:600;letter-spacing:-.04em;margin-bottom:12px;cursor:pointer}
+.footer-tagline{font-size:13px;color:rgba(255,255,255,.35);line-height:1.7;font-weight:300;max-width:200px}
+.fc h5{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32);margin-bottom:14px}
+.fc ul{display:flex;flex-direction:column;gap:9px}
+.fc ul li a{font-size:13.5px;color:rgba(255,255,255,.52);transition:color .12s;cursor:pointer}
+.fc ul li a:hover{color:#fff}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;font-size:12.5px;color:rgba(255,255,255,.28)}
+.footer-links-row{display:flex;gap:16px}
+.footer-links-row a{font-size:12.5px;color:rgba(255,255,255,.28);cursor:pointer;transition:color .12s}
+.footer-links-row a:hover{color:rgba(255,255,255,.55)}
+
+@media(max-width:900px){
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .values-grid{grid-template-columns:1fr 1fr}
+  .investor-grid{grid-template-columns:repeat(2,1fr)}
+  .numbers-inner{grid-template-columns:repeat(2,1fr)}
+  .num-card{border-right:none;border-bottom:1px solid var(--border)}
+  .careers-teaser{flex-direction:column}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:620px){
+  .container,.numbers-inner{padding:0 18px}
+  nav{padding:0 18px}
+  .values-grid,.team-grid{grid-template-columns:1fr}
+  .investor-grid{grid-template-columns:1fr 1fr}
+  .numbers-inner{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand" onclick="window.location.href='index.html'">
+    <svg width="26" height="26" viewBox="0 0 80 80" fill="none">
+      <defs><radialGradient id="g1" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".95"/><stop offset="100%" stop-color="#8ab5f5" stop-opacity=".88"/></radialGradient><radialGradient id="g2" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".9"/><stop offset="100%" stop-color="#7aaaf0" stop-opacity=".92"/></radialGradient></defs>
+      <ellipse cx="30" cy="27" rx="23" ry="19" fill="url(#g1)" transform="rotate(-18 30 27)"/>
+      <ellipse cx="50" cy="27" rx="23" ry="19" fill="url(#g1)" transform="rotate(18 50 27)"/>
+      <ellipse cx="31" cy="56" rx="17" ry="14" fill="url(#g2)" transform="rotate(14 31 56)"/>
+      <ellipse cx="49" cy="56" rx="17" ry="14" fill="url(#g2)" transform="rotate(-14 49 56)"/>
+    </svg>
+    <span class="nav-brand-name">Area</span>
+  </div>
+  <div class="nav-links">
+    <span class="nav-link" onclick="window.location.href='index.html'">Home</span>
+    <span class="nav-link" onclick="window.location.href='area-docs.html'">Docs</span>
+    <span class="nav-link" onclick="window.location.href='pricing.html'">Pricing</span>
+    <span class="nav-link active">About</span>
+    <span class="nav-link" onclick="window.location.href='blog.html'">Blog</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-outline btn-sm" onclick="window.location.href='area-console.html'">Console</button>
+    <button class="btn btn-dark btn-sm" onclick="window.location.href='area-docs.html'">Get API key</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="about-hero">
+  <div class="container">
+    <span class="s-label">About Area</span>
+    <h1 class="s-heading">We're building AI that genuinely helps everyone</h1>
+    <p class="s-sub">Area was founded in 2022 by AI safety researchers and product engineers who believed the most powerful AI systems could also be the most trustworthy — and that those goals reinforce each other.</p>
+  </div>
+</div>
+
+<!-- NUMBERS -->
+<div class="numbers-strip">
+  <div class="numbers-inner">
+    <div class="num-card"><div class="num-val">2022</div><div class="num-lbl">Year founded</div></div>
+    <div class="num-card"><div class="num-val">280+</div><div class="num-lbl">Team members</div></div>
+    <div class="num-card"><div class="num-val">$750M</div><div class="num-lbl">Total raised</div></div>
+    <div class="num-card"><div class="num-val">120+</div><div class="num-lbl">Enterprise customers</div></div>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section class="mission-section">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+      <div>
+        <span class="s-label">Our Mission</span>
+        <div class="mission-pull">"Our mission is to develop AI that is safe, beneficial, and comprehensible — not just <em>capable</em>."</div>
+        <div class="mission-body">
+          <p>We started Area because we believed the AI safety and AI capability communities were treating those goals as trade-offs when they're actually complements. The safest AI systems are also the most reliable, the most honest, and ultimately the most useful.</p>
+          <p>We're building toward a world where highly capable AI systems are deployed responsibly — where the benefits are broadly shared, where risks are carefully managed, and where the technology genuinely augments human potential rather than replacing human judgment wholesale.</p>
+          <p>That's a hard problem. We don't have all the answers. But we think the best approach is to be transparent about what we know and don't know, to publish our research, to engage with critics honestly, and to build the infrastructure for AI development that is accountable to the people it serves.</p>
+        </div>
+      </div>
+      <div>
+        <span class="s-label">Our History</span>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-year">2022 — Q3</div>
+            <div class="tl-title">Area founded</div>
+            <div class="tl-body">Founded by researchers from OpenAI, Google Brain, and DeepMind. Raised $124M seed round led by Google and Spark Capital to pursue safety-first AI development.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-year">2023 — Q1</div>
+            <div class="tl-title">Constitutional AI paper published</div>
+            <div class="tl-body">Published "Constitutional AI: Harmlessness from AI Feedback," introducing a new approach to training helpful, harmless, and honest models without relying on human labels for every judgment.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-year">2023 — Q2</div>
+            <div class="tl-title">Area 1.0 public launch</div>
+            <div class="tl-body">Launched the Area API publicly with Area Sonnet 1.0. Reached 10,000 developers in the first week. Raised $300M Series B, valuing the company at $4.1B.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-year">2023 — Q4</div>
+            <div class="tl-title">Responsible Scaling Policy</div>
+            <div class="tl-body">Published our Responsible Scaling Policy — a concrete framework for how we evaluate and deploy powerful models as capabilities increase, ensuring safety measures keep pace.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-year">2024 — Q1</div>
+            <div class="tl-title">Area 2.0 — Sonnet, Opus, Haiku</div>
+            <div class="tl-body">Launched the Sonnet/Opus/Haiku model family — a complete tiered offering. Area Opus became the highest-scoring model on multiple public benchmarks. Raised additional $326M at $18.4B valuation.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-year">2025 — Q1</div>
+            <div class="tl-title">Area 3.8 — extended thinking</div>
+            <div class="tl-body">Launched Sonnet 3.8 with extended thinking mode, achieving state-of-the-art on coding and math benchmarks. 120+ enterprise customers, $750M total raised, 280+ team members across 3 offices.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section section-alt">
+  <div class="container">
+    <span class="s-label">Values</span>
+    <h2 class="s-heading" style="margin-bottom:40px">What we believe about AI</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-num">01</div>
+        <div class="value-title">Safety and helpfulness are complements</div>
+        <div class="value-body">We reject the framing that safety and capability are at odds. Our Constitutional AI approach proves that models can be trained to be genuinely helpful precisely because they have principled limits — not in spite of them. Safe models are also trustworthy models, and trustworthy models get used more.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">02</div>
+        <div class="value-title">Radical honesty — even when it's uncomfortable</div>
+        <div class="value-body">We don't want AI that tells people what they want to hear. Area models are trained to be genuinely honest, which sometimes means respectfully disagreeing, acknowledging uncertainty, or flagging when a request might lead to harm. Sycophantic AI is dangerous AI.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">03</div>
+        <div class="value-title">Long-term thinking over short-term wins</div>
+        <div class="value-body">We're building for the decades ahead, not just the next quarter. That means making thoughtful decisions about which capabilities to develop and when, how we deploy systems, and how we engage with the broader ecosystem — even when slower decisions cost us in the short term.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">04</div>
+        <div class="value-title">Open science and collaborative progress</div>
+        <div class="value-body">We publish our research, engage openly with critics, and believe that the AI safety community as a whole benefits when knowledge is shared widely. Competitive advantage built on secrecy makes everyone less safe. We'd rather win on execution than information asymmetry.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">05</div>
+        <div class="value-title">Diverse perspectives improve outcomes</div>
+        <div class="value-body">The most consequential decisions about AI should reflect the diversity of people affected by it. We actively recruit across backgrounds, engage external experts in ethics, policy, and safety, and hold ourselves accountable to communities beyond the tech industry.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">06</div>
+        <div class="value-title">Iterate openly, improve continuously</div>
+        <div class="value-body">We'd rather release good work and improve openly than wait indefinitely for perfection. We publish model cards, share evaluation results — including failures — and update our practices based on what we learn in real-world deployment. Honest imperfection beats opaque polish.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section class="section">
+  <div class="container">
+    <span class="s-label">Leadership</span>
+    <h2 class="s-heading" style="margin-bottom:40px">The team building Area</h2>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-av">DA</div><div class="team-name">Dario Amedei</div><div class="team-role">Co-founder & CEO</div><div class="team-prev">Previously: VP Research, OpenAI</div></div>
+      <div class="team-card"><div class="team-av">DM</div><div class="team-name">Daniela Moretti</div><div class="team-role">Co-founder & President</div><div class="team-prev">Previously: COO, OpenAI</div></div>
+      <div class="team-card"><div class="team-av">CW</div><div class="team-name">Chris Worthen</div><div class="team-role">Chief Technology Officer</div><div class="team-prev">PhD, Stanford CS · DeepMind</div></div>
+      <div class="team-card"><div class="team-av">JC</div><div class="team-name">Jared Clark</div><div class="team-role">VP of Research</div><div class="team-prev">Previously: Research Lead, DeepMind</div></div>
+      <div class="team-card"><div class="team-av">LR</div><div class="team-name">Lena Roberts</div><div class="team-role">VP of Product</div><div class="team-prev">Previously: Stripe · Square</div></div>
+      <div class="team-card"><div class="team-av">MB</div><div class="team-name">Marcus Blake</div><div class="team-role">VP of Engineering</div><div class="team-prev">Previously: Meta AI Infrastructure</div></div>
+      <div class="team-card"><div class="team-av">SP</div><div class="team-name">Sofia Patel</div><div class="team-role">Chief Safety Officer</div><div class="team-prev">PhD, Berkeley EECS · AI safety researcher</div></div>
+      <div class="team-card"><div class="team-av">KN</div><div class="team-name">Kevin Nguyen</div><div class="team-role">VP of Sales & GTM</div><div class="team-prev">Previously: Salesforce Enterprise</div></div>
+      <div class="team-card"><div class="team-av">AK</div><div class="team-name">Aisha Kamara</div><div class="team-role">VP of Finance & Operations</div><div class="team-prev">Previously: CFO, Scale AI</div></div>
+      <div class="team-card"><div class="team-av">RT</div><div class="team-name">Ryo Tanaka</div><div class="team-role">Head of Policy & Comms</div><div class="team-prev">Previously: Google Policy · FTC</div></div>
+      <div class="team-card"><div class="team-av">EC</div><div class="team-name">Elena Castillo</div><div class="team-role">Head of Design</div><div class="team-prev">Previously: Figma · Airbnb Design</div></div>
+      <div class="team-card"><div class="team-av">PJ</div><div class="team-name">Priya Joshi</div><div class="team-role">Head of Developer Relations</div><div class="team-prev">Previously: GitHub · Vercel</div></div>
+    </div>
+    <p style="font-size:14px;color:var(--text4);margin-top:24px;text-align:center">280+ more exceptional people across engineering, research, sales, and operations.</p>
+  </div>
+</section>
+
+<!-- INVESTORS -->
+<section class="section section-alt">
+  <div class="container">
+    <span class="s-label">Backed by</span>
+    <h2 class="s-heading" style="margin-bottom:12px">Our investors</h2>
+    <p style="font-size:15px;color:var(--text3);font-weight:300;max-width:500px;margin-bottom:40px;line-height:1.7">$750M raised from the world's leading technology investors who share our conviction that safe AI is good business.</p>
+    <div class="investor-grid">
+      <div class="investor-card"><div class="investor-logo">G</div><div class="investor-name">Google Ventures</div><div class="investor-type">Lead · Seed &amp; Series A</div></div>
+      <div class="investor-card"><div class="investor-logo">SC</div><div class="investor-name">Spark Capital</div><div class="investor-type">Co-lead · Seed</div></div>
+      <div class="investor-card"><div class="investor-logo">A16</div><div class="investor-name">Andreessen Horowitz</div><div class="investor-type">Series B</div></div>
+      <div class="investor-card"><div class="investor-logo">SEQ</div><div class="investor-name">Sequoia Capital</div><div class="investor-type">Series B</div></div>
+      <div class="investor-card"><div class="investor-logo">SK</div><div class="investor-name">SK Telecom</div><div class="investor-type">Strategic · Series B</div></div>
+      <div class="investor-card"><div class="investor-logo">SB</div><div class="investor-name">SoftBank Vision</div><div class="investor-type">Series C</div></div>
+      <div class="investor-card"><div class="investor-logo">AM</div><div class="investor-name">Amazon</div><div class="investor-type">Strategic partner</div></div>
+      <div class="investor-card"><div class="investor-logo">GC</div><div class="investor-name">General Catalyst</div><div class="investor-type">Series A &amp; B</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREERS TEASER -->
+<section class="section">
+  <div class="container">
+    <div class="careers-teaser">
+      <div>
+        <h3>Want to help us build<br>beneficial AI?</h3>
+        <p>We're hiring researchers, engineers, and operators across safety, interpretability, infrastructure, product, and more. Remote-friendly with offices in SF and London.</p>
+      </div>
+      <div class="careers-btns">
+        <button class="btn-white" onclick="alert('Careers page — coming soon!')">View open roles</button>
+        <button class="btn-ghost-white" onclick="window.location.href='index.html'">Contact us</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row" onclick="window.location.href='index.html'">
+          <svg width="22" height="22" viewBox="0 0 80 80" fill="none"><defs><radialGradient id="fg1" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".9"/><stop offset="100%" stop-color="#8ab5f5" stop-opacity=".7"/></radialGradient><radialGradient id="fg2" cx="30%" cy="25%" r="75%"><stop offset="0%" stop-color="#fff" stop-opacity=".85"/><stop offset="100%" stop-color="#7aaaf0" stop-opacity=".75"/></radialGradient></defs>
+            <ellipse cx="30" cy="27" rx="23" ry="19" fill="url(#fg1)" transform="rotate(-18 30 27)"/><ellipse cx="50" cy="27" rx="23" ry="19" fill="url(#fg1)" transform="rotate(18 50 27)"/><ellipse cx="31" cy="56" rx="17" ry="14" fill="url(#fg2)" transform="rotate(14 31 56)"/><ellipse cx="49" cy="56" rx="17" ry="14" fill="url(#fg2)" transform="rotate(-14 49 56)"/>
+          </svg>
+          Area
+        </div>
+        <div class="footer-tagline">Building AI that is safe, beneficial, and comprehensible — for everyone.</div>
+      </div>
+      <div class="fc"><h5>Platform</h5><ul><li><a href="area-docs.html">API Docs</a></li><li><a href="area-console.html">Console</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="playground.html">Playground</a></li></ul></div>
+      <div class="fc"><h5>Company</h5><ul><li><a href="about.html">About</a></li><li><a href="blog.html">Blog</a></li><li><a>Careers</a></li><li><a href="index.html">Contact</a></li></ul></div>
+      <div class="fc"><h5>Research</h5><ul><li><a>Publications</a></li><li><a>Constitutional AI</a></li><li><a>Interpretability</a></li><li><a>Safety policy</a></li></ul></div>
+      <div class="fc"><h5>Legal</h5><ul><li><a>Privacy Policy</a></li><li><a>Terms of Service</a></li><li><a>Security</a></li><li><a>Trust Center</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Area AI, Inc.</span>
+      <div class="footer-links-row"><a>Status</a><a>Responsible AI</a><a>Trust Center</a></div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
